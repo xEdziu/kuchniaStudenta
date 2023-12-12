@@ -8,6 +8,8 @@
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
+### add .env to gitignore ###
+/.env
 
 ###> symfony/webpack-encore-bundle ###
 /node_modules/
