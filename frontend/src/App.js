@@ -8,7 +8,7 @@ function App() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('https://192.168.66.92:8001/api/hello');
+        const response = await axios.get(`https://192.168.66.92:${process.env.REACT_APP_SYMFONY_PORT}/api/hello`);
         setMessage(response.data.message);
       } catch (error) {
         console.error('Error fetching data from backend:', error);
@@ -32,5 +32,4 @@ function App() {
     </div>
   );
 }
-//localhost:8000/api/hello
 export default App;

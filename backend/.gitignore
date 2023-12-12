@@ -12,6 +12,7 @@
 ### add .env to gitignore ###
 /.env
 backend/.env
+.env
 
 ###> symfony/webpack-encore-bundle ###
 /node_modules/
