@@ -9,6 +9,9 @@
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
+### add .env to gitignore ###
+/.env
+backend/.env
 
 ###> symfony/webpack-encore-bundle ###
 /node_modules/
