@@ -17,6 +17,6 @@ echo "Symfony server started on: $serv_ip:$port"
 # Start React app
 cd ../frontend
 # Replace the REACT_APP_SYMFONY_PORT line in the .env file
-sed -i "s/^REACT_APP_SYMFONY_PORT=.*/REACT_APP_SYMFONY_PORT=$serv_ip:$port/" .env
+sed -i "s/^REACT_APP_SYMFONY_PORT=.*/REACT_APP_SYMFONY=$serv_ip:$port/" .env
 
 npm start &

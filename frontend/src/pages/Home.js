@@ -6,7 +6,7 @@ function App() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`https://${process.env.REACT_APP_SYMFONY_URL}/api/hello`);
+                const response = await axios.get(`https://${process.env.REACT_APP_SYMFONY}/api/hello`);
                 setMessage(response.data.message);
             } catch (error) {
                 console.error('Error fetching data from backend:', error);

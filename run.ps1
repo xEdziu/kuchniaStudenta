@@ -18,7 +18,7 @@ Set-Location "../frontend"
 
 # Replace the REACT_APP_SYMFONY_PORT line in the .env file
 (Get-Content .\.env) | ForEach-Object {
-    $_ -replace "^REACT_APP_SYMFONY_PORT=.*", "REACT_APP_SYMFONY_PORT=${serv_ip}:${port}"
+    $_ -replace "^REACT_APP_SYMFONY=.*", "REACT_APP_SYMFONY=${serv_ip}:${port}"
 } | Set-Content .\.env
 
 # Start the React app
