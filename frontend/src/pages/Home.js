@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import HeroSection from '../components/HeroSection';
+import AboutSection from '../components/AboutSection';
 
 function App() {
     const [message, setMessage] = useState('');
@@ -18,9 +20,8 @@ function App() {
 
     return (
         <div>
-            <p>
-                {message}
-            </p>
+            <HeroSection />
+            <AboutSection />
         </div>
     );
 }
