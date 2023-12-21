@@ -11,6 +11,7 @@ composer require symfony/validator
 composer require symfony/webpack-encore-bundle
 composer require nelmio/cors-bundle
 composer require symfony/flex
+composer require symfony/runtime
 
 # Initialize a new React.js application
 Set-Location -Path ..
