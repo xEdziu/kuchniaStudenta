@@ -1,12 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
 import HeroImg from '../assets/images/cooker.svg';
+import Button from './Button';
 
 const AboutStyles = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 2rem;
+    margin-top: 4rem;
     margin-bottom: 2rem;
     margin-left: 10rem;
     margin-right: 10rem;
@@ -51,6 +52,7 @@ const AboutSection = () => {
             <div className="text-container">
                 <h1>Dla studenta od... studenta!</h1>
                 <p>Odkrywaj i umieszczaj ciekawe przepisy</p>
+                <Button btnText="Zobacz przepisy" btnLink="/recipes" />
             </div>
         </AboutStyles>
     );

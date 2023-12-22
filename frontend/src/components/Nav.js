@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 import logo from '../assets/images/logo-clear-bg.svg';
 
@@ -84,16 +85,16 @@ export default function Nav() {
                 <img src={logo} alt="logo" className="logo" />
                 <ul>
                     <li>
-                        <a href="/" className="active">Strona Główna</a>
+                        <NavLink to="/" exact>Strona Główna</NavLink>
                     </li>
                     <li>
-                        <a href="/about">O nas</a>
+                        <NavLink to="/about">O nas</NavLink>
                     </li>
                     <li>
-                        <a href="/recipes">Przepisy</a>
+                        <NavLink to="/recipes">Przepisy</NavLink>
                     </li>
                     <li>
-                        <a href="/login">Logowanie</a>
+                        <NavLink to="/login">Logowanie</NavLink>
                     </li>
                 </ul>
             </div>

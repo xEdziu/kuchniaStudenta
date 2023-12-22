@@ -6,7 +6,7 @@ const HeroStyles = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 2rem;
+    margin-top: 4rem;
     margin-bottom: 2rem;
     margin-left: 10rem;
     margin-right: 10rem;
