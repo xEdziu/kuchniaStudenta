@@ -19,7 +19,8 @@
         "symfony/runtime": "^7.0",
         "symfony/validator": "7.0.*",
         "symfony/webpack-encore-bundle": "^2.1",
-        "symfony/yaml": "7.0.*"
+        "symfony/yaml": "7.0.*",
+        "ext-gd": "*"
     },
     "config": {
         "allow-plugins": {

@@ -4,11 +4,17 @@ Set-Location "backend"
 # Start the Symfony server
 Start-Process "symfony" "server:start -d" -NoNewWindow
 
+# Wait 5 seconds
+Start-Sleep -s 5
+
 # Get the server status
 $server_status = symfony server:status
 
 # Extract the port number
 $port = $server_status -match ':[0-9]+' | ForEach-Object { $_.Split(':')[1] } | Select-Object -First 1
+
+# Extract the server IP
+$serv_ip = $server_status -match '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+' | ForEach-Object { $_.Split(':')[0] } | Select-Object -First 1
 
 # Echo the port
 Write-Output "Symfony server started on port: "$serv_ip":"$port""

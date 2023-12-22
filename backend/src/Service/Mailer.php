@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Utility;
+namespace App\Service;
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
