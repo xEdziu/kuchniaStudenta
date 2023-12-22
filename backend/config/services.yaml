@@ -4,6 +4,11 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    mail.debug: true
+    mail.host: '%env(MAILER_HOST)%'
+    mail.port: '%env(MAILER_PORT)%'
+    mail.user: '%env(USER_SMTP)%'
+    mail.password: '%env(PASS_SMTP)%'
 
 services:
     # default configuration for services in *this* file
@@ -22,3 +27,10 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    App\Utility\Mailer:
+        arguments:
+            $debug: '%mail.debug%'
+            $host: '%mail.host%'
+            $port: '%mail.port%'
+            $user: '%mail.user%'
+            $password: '%mail.password%'
