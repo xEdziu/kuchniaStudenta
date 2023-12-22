@@ -82,7 +82,7 @@ export default function Nav() {
     return (
         <NavStyles className={scrolled ? 'scrolled' : ''}>
             <div className="container">
-                <img src={logo} alt="logo" className="logo" />
+                <NavLink to="/" exact><img src={logo} alt="logo" className="logo" /></NavLink>
                 <ul>
                     <li>
                         <NavLink to="/" exact>Strona Główna</NavLink>
