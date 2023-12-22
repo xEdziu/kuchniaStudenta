@@ -106,7 +106,7 @@ function Login() {
             <div className="container">
                 <div className="form-container">
                     <h1>Logowanie</h1>
-                    <form onSubmit={handleSubmit}>
+                    <form onSubmit={handleSubmit} encType='multipart/form-data'>
                         <input
                             type="email"
                             placeholder="Email"

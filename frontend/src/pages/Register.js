@@ -108,7 +108,7 @@ function Register() {
             <div className="container">
                 <div className="form-container">
                     <h1>Rejestracja</h1>
-                    <form onSubmit={handleSubmit}>
+                    <form onSubmit={handleSubmit} encType='multipart/form-data'>
                         <input
                             type="text"
                             placeholder="Nazwa użytkownika"
