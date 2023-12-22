@@ -33,6 +33,9 @@ class User
     #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Recipe::class)]
     private Collection $recipes;
 
+    #[ORM\Column]
+    private ?bool $active = false;
+
     public function __construct()
     {
         $this->recipes = new ArrayCollection();
@@ -136,6 +139,18 @@ class User
                 $recipe->setUserId(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isActive(): ?bool
+    {
+        return $this->active;
+    }
+
+    public function setActive(bool $active): static
+    {
+        $this->active = $active;
 
         return $this;
     }
