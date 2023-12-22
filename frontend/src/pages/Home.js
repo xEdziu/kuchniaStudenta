@@ -1,27 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React from 'react';
+import HeroSection from '../components/HeroSection';
+import AboutSection from '../components/AboutSection';
 
-function App() {
-    const [message, setMessage] = useState('');
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await axios.get(`https://${process.env.REACT_APP_SYMFONY}/api/hello`);
-                setMessage(response.data.message);
-            } catch (error) {
-                console.error('Error fetching data from backend:', error);
-            }
-        };
-
-        fetchData();
-    }, []);
+function Home() {
 
     return (
         <div>
-            <p>
-                {message}
-            </p>
+            <HeroSection />
+            <AboutSection />
         </div>
     );
 }
-export default App;
+export default Home;
