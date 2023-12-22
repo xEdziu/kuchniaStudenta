@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import Guard from '../assets/images/guard.svg';
 
-const LoginStyles = styled.div`
+const RegisterStyles = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
@@ -91,10 +91,12 @@ const LoginStyles = styled.div`
 
 `;
 
-function Login() {
+function Register() {
 
+    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [passwordCheck, setPasswordCheck] = useState('');
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -102,11 +104,17 @@ function Login() {
     }
 
     return (
-        <LoginStyles>
+        <RegisterStyles>
             <div className="container">
                 <div className="form-container">
-                    <h1>Logowanie</h1>
+                    <h1>Rejestracja</h1>
                     <form onSubmit={handleSubmit}>
+                        <input
+                            type="text"
+                            placeholder="Nazwa użytkownika"
+                            value={name}
+                            onChange={(event) => setName(event.target.value)}
+                        />
                         <input
                             type="email"
                             placeholder="Email"
@@ -119,16 +127,22 @@ function Login() {
                             value={password}
                             onChange={(event) => setPassword(event.target.value)}
                         />
-                        <button type="submit">Zaloguj się</button>
+                        <input
+                            type="password"
+                            placeholder="Powtórz hasło"
+                            value={passwordCheck}
+                            onChange={(event) => setPasswordCheck(event.target.value)}
+                        />
+                        <button type="submit">Zarejestruj się</button>
                     </form>
-                    <p className="req">Nie masz konta? <a href="/register">Zarejestruj się</a></p>
+                    <p className="req">Masz juz konto? <a href="/login">Zaloguj się</a></p>
                 </div>
             </div>
             <div className="image-container">
                 <img src={Guard} alt="Guard" />
             </div>
-        </LoginStyles>
+        </RegisterStyles>
     );
 }
 
-export default Login;
+export default Register;
