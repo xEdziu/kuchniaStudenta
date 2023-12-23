@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const RecipesStyles = styled.div`
+const ContactStyles = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
@@ -20,15 +20,15 @@ const RecipesStyles = styled.div`
     }
 `;
 
-function Recipes() {
+function Contact() {
 
     return (
-        <RecipesStyles>
+        <ContactStyles>
             <div className="container">
-                <h1>Przepisy</h1>
+                <h1>Kontakt</h1>
                 <p></p>
             </div>
-        </RecipesStyles>
+        </ContactStyles>
     );
 }
-export default Recipes;
+export default Contact;

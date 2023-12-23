@@ -88,10 +88,10 @@ export default function Nav() {
                         <NavLink to="/" exact>Strona Główna</NavLink>
                     </li>
                     <li>
-                        <NavLink to="/about">O nas</NavLink>
+                        <NavLink to="/recipes">Przepisy</NavLink>
                     </li>
                     <li>
-                        <NavLink to="/recipes">Przepisy</NavLink>
+                        <NavLink to="/contact">Kontakt</NavLink>
                     </li>
                     <li>
                         <NavLink to="/login">Logowanie</NavLink>

@@ -1,20 +1,179 @@
 import React from 'react'
 import styled from 'styled-components';
+import { FaInstagram, FaLinkedin, FaGoogle } from "react-icons/fa";
 
 const FooterStyles = styled.div`
-    background-color: var(--bg);
-    padding: 1rem;
-    width: 100%;
+    .heart {
+    color: red;
+    }
+    footer {
+    /* position: absolute; */
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #111;
+    height: auto;
+    padding-top: 40px;
+    color: #fff;
+    }
+    .footer-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
     text-align: center;
-    color: var(--dark);
+    }
+    .footer-content h3 {
+    font-size: 2.1rem;
+    font-weight: 500;
+    text-transform: capitalize;
+    line-height: 3rem;
+    }
+    .footer-content p {
+    max-width: 500px;
+    margin: 10px auto;
+    line-height: 28px;
+    font-size: 14px;
+    color: #cacdd2;
+    }
+    .socials {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 1rem 0 3rem 0;
+    }
+    .socials li {
+    margin: 0 10px;
+    }
+    .socials a {
+    text-decoration: none;
+    color: #fff;
+    /* border: 1.1px solid white; */
+    padding: 5px;
+
+    border-radius: 50%;
+    }
+    .socials a i {
+    font-size: 1.1rem;
+    width: 20px;
+
+    transition: color 0.4s ease;
+    }
+    .socials a:hover i {
+    color: aqua;
+    }
+
+    .footer-bottom {
+    background: #000;
+    padding: 20px;
+    font-size: 16px;
+    padding-bottom: 40px;
+    text-align: center;
+    }
+    .footer-bottom p {
+    float: left;
+    font-size: 13px;
+    word-spacing: 2px;
+    text-transform: capitalize;
+    }
+    .footer-bottom p a {
+    color: #44bae8;
+    font-size: 15px;
+    text-decoration: none;
+    }
+    .footer-bottom span {
+    text-transform: uppercase;
+    opacity: 0.4;
+    font-weight: 200;
+    }
+    .footer-menu {
+    float: right;
+    }
+    .footer-menu ul {
+    display: flex;
+    }
+    .footer-menu ul li {
+    padding-right: 10px;
+    display: block;
+    }
+    .footer-menu ul li a {
+    color: #cfd2d6;
+    text-decoration: none;
+    }
+    .footer-menu ul li a:hover {
+    color: #27bcda;
+    }
+
+    @media (max-width: 500px) {
+    .footer-menu ul {
+        display: flex;
+        margin-top: 10px;
+        margin-bottom: 20px;
+    }
+    }
+
 `;
 
 export default function Footer() {
     return (
         <FooterStyles>
-            <div className="container">
-                <p>Adrian Goral & Jakub Przybysz 2023</p>
-            </div>
+            <footer>
+                <div className="footer-content">
+                    <h3>Kuchnia Studenta</h3>
+                    <p>
+                        Made with <span class="heart">&#10084;</span> by Adrian and Kuba
+                    </p>
+                    <ul className="socials">
+                        <li>
+                            <a href="#">
+                                <FaGoogle size={30} color="#DB4437" />
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <FaInstagram size={30} color="#C13584" />
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <FaInstagram size={30} color="#C13584" />
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <FaInstagram size={30} color="#C13584" />
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <FaLinkedin size={30} color="#0077B5" />
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div className="footer-bottom">
+                    <p>
+                        copyright &copy; <a href="/">Kuchnia Studenta</a>{" "}
+                    </p>
+                    <div className="footer-menu">
+                        <ul className="f-menu">
+                            <li>
+                                <a href="/">Strona Główna</a>
+                            </li>
+                            <li>
+                                <a href="/recipes">Przepisy</a>
+                            </li>
+                            <li>
+                                <a href="/contact">Kontakt</a>
+                            </li>
+                            <li>
+                                <a href="/login">Logowanie</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </footer>
         </FooterStyles>
     )
 }

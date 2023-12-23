@@ -32,20 +32,20 @@ const MyAccountStyles = styled.div`
 `;
 
 function Account() {
-    const handleLogout = () => {
-        // Handle logout logic here
-    };
+  const handleLogout = () => {
+    // Handle logout logic here
+  };
 
-    return (
-        <MyAccountStyles>
-            <h2>Moje konto</h2>
-            <div className="container">
-                <p>Witaj, Kubis10!</p>
-            </div>
-            <button className="logout-button" onClick={handleLogout}>
-                Logout
-            </button>
-        </MyAccountStyles>
-    );
+  return (
+    <MyAccountStyles>
+      <h2>Moje konto</h2>
+      <div className="container">
+        <p>Witaj, Kubis10!</p>
+      </div>
+      <button className="logout-button" onClick={handleLogout}>
+        Wyloguj się
+      </button>
+    </MyAccountStyles>
+  );
 }
 export default Account;
