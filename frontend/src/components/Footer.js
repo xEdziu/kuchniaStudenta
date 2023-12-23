@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components';
-import { FaInstagram, FaLinkedin, FaGoogle } from "react-icons/fa";
+import { FaInstagram, FaLinkedin, FaGoogle, FaFacebookF, FaFacebookSquare, FaGlobe } from "react-icons/fa";
 
 const FooterStyles = styled.div`
     .heart {
@@ -127,27 +127,22 @@ export default function Footer() {
                     <ul className="socials">
                         <li>
                             <a href="#">
-                                <FaGoogle size={30} color="#DB4437" />
+                                <FaFacebookSquare size={20} color="#ffffff" />
                             </a>
                         </li>
                         <li>
                             <a href="#">
-                                <FaInstagram size={30} color="#C13584" />
+                                <FaInstagram size={20} color="#ffffff" />
                             </a>
                         </li>
                         <li>
                             <a href="#">
-                                <FaInstagram size={30} color="#C13584" />
+                                <FaGlobe size={20} color="#ffffff" />
                             </a>
                         </li>
                         <li>
                             <a href="#">
-                                <FaInstagram size={30} color="#C13584" />
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <FaLinkedin size={30} color="#0077B5" />
+                                <FaLinkedin size={20} color="#ffffff" />
                             </a>
                         </li>
                     </ul>
