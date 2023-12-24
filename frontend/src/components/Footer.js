@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components';
-import { FaInstagram, FaLinkedin, FaGoogle, FaFacebookF, FaFacebookSquare, FaGlobe } from "react-icons/fa";
+import { FaInstagram, FaLinkedin, FaFacebookSquare, FaGlobe } from "react-icons/fa";
 
 const FooterStyles = styled.div`
     .heart {
