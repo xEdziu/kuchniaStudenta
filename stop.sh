@@ -1,4 +1,4 @@
-#!/bin/bash
+#! /bin/bash
 
 # Stop the Symfony server
 cd backend

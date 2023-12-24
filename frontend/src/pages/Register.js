@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import Guard from '../assets/images/guard.svg';
+import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const RegisterStyles = styled.div`
     display: flex;
@@ -100,7 +102,41 @@ function Register() {
 
     const handleSubmit = (event) => {
         event.preventDefault();
+        if(password !== passwordCheck) {
+            Swal.fire({
+                title: 'Błąd!',
+                text: 'Hasła nie są takie same!',
+                icon: 'error',
+                confirmButtonText: 'Spróbuj ponownie'
+            });
+            return;
+        }
+
+        if(password.length < 8) {
+            Swal.fire({
+                title: 'Błąd!',
+                text: 'Hasło musi mieć minimum 8 znaków!',
+                icon: 'error',
+                confirmButtonText: 'Spróbuj ponownie'
+            });
+            return;
+        }
+        
         console.log('submit');
+        const fetchData = async () => {
+            try {
+                const response = await axios.post(`http://${process.env.REACT_APP_SYMFONY}/api/register`, {
+                    name: name,
+                    email: email,
+                    pwd1: password
+                });
+                console.log(response);
+            } catch (error) {
+                console.error('Error fetching data from backend:', error);
+            }
+        };
+
+        fetchData();
     }
 
     return (
