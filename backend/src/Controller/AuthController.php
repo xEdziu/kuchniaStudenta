@@ -18,27 +18,28 @@ class AuthController extends AbstractController
 
     private EntityManagerInterface $entityManagerInterface;
 //    private ImageConverter $imageConverter;
-    private Mailer $mailer;
+    // private Mailer $mailer;
 
-    public function __construct(EntityManagerInterface $entityManagerInterface,
+    public function __construct(EntityManagerInterface $entityManagerInterface)
 //                    ImageConverter $imageConverter,
-                    Mailer $mailer)
+                    // Mailer $mailer)
     {
         $this->entityManagerInterface = $entityManagerInterface;
 //        $this->imageConverter = $imageConverter;
-        $this->mailer = $mailer;
+        // $this->mailer = $mailer;
     }
 
     #[Route('/api/register', name: 'app_auth_register', methods: ['POST'])]
     public function register(Request $request): Response
     {
         $data = json_decode($request->getContent(), true);
+        
+        return $this->json(dd($data));
 
-        $username = $data['username'];
+        $username = $data['name'];
         $email = filter_var($data['email'], FILTER_VALIDATE_EMAIL);
         $pwd1 = $data['pwd1'];
-        $pwd2 = $data['pwd2'];
-        $image = $request->files->get('image');
+        // $image = $request->files->get('image');
 
         if (strlen($username) < 3 || strlen($username) > 50) {
             $response = [
@@ -68,16 +69,8 @@ class AuthController extends AbstractController
             return $this->json($response);
         }
 
-        if ($pwd1 !== $pwd2) {
-            $response = [
-                "icon" => "warning",
-                "title" => "Chyba coś poszło nie tak",
-                "message" => "Hasła nie są takie same",
-            ];
-            return $this->json($response);
-        }
-
         $user = $this->entityManagerInterface->getRepository(User::class)->findOneBy(['username' => $username]);
+
 
         if ($user) {
             $response = [
@@ -100,14 +93,14 @@ class AuthController extends AbstractController
         }
 
 
-        if ($image == null) {
-            $filename = 'default.webp';
-        } else {
-            $originalFilename = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
-            $filename = $originalFilename.'-'.uniqid().'.'.$image->guessExtension();
-            $destination = '../../../frontend/public/src/assets/images/users/';
-            $image->move($destination, $filename);
-        }
+        // if ($image == null) {
+        //     $filename = 'default.webp';
+        // } else {
+        //     $originalFilename = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
+        //     $filename = $originalFilename.'-'.uniqid().'.'.$image->guessExtension();
+        //     $destination = '../../../frontend/public/src/images/users/';
+        //     $image->move($destination, $filename);
+        // }
 
 
 //        if ($image['error'] == 0) {
@@ -161,7 +154,7 @@ class AuthController extends AbstractController
         $user->setUsername($username);
         $user->setEmail($email);
         $user->setPassword($new_password);
-        $user->setImage($filename);
+        $user->setImage('default.webp');
         $user->setHash($activation_hash);
         $user->setActive(false);
 
@@ -169,12 +162,24 @@ class AuthController extends AbstractController
         $this->entityManagerInterface->flush();
 
 
-        for ($i = 0; $i < 3; $i++){
-            $response = $this->mailer->sendActivationMail($email, $activation_hash);
-            if ($response['data']['code'] === 0){
-                break;
-            }
-        }
+        // for ($i = 0; $i < 3; $i++){
+        //     $response = $this->mailer->sendActivationMail($email, $activation_hash);
+        //     if ($response['data']['code'] === 0){
+        //         break;
+        //     }
+        // }
+
+        $response = [
+            "icon" => "success",
+            "title" => "Sukces",
+            "message" => "Konto zostało utworzone",
+            "footer" => "Sprawdź swoją skrzynkę odbiorczą",
+            "data" => [
+                "error" => null,
+                "code" => 0,
+            ]
+            ];
+        
 
         return $this->json($response);
     }
@@ -242,7 +247,7 @@ class AuthController extends AbstractController
         $email = $data['email'];
         $password = $data['password'];
 
-        $user = $this->entityManagerInterface->getRepository(User::class)->findOneBy(['username' => $email]);
+        $user = $this->entityManagerInterface->getRepository(User::class)->findOneBy(['email' => $email]);
 
         if (!$user) {
             $response = [

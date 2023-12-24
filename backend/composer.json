@@ -60,6 +60,9 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
+        ],
+        "post-autoload-dump": [
+            "App\\Service\\Mailer::postAutoloadDump"
         ]
     },
     "conflict": {

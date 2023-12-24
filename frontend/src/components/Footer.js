@@ -122,7 +122,7 @@ export default function Footer() {
                 <div className="footer-content">
                     <h3>Kuchnia Studenta</h3>
                     <p>
-                        Made with <span class="heart">&#10084;</span> by Adrian and Kuba
+                        Made with <span className="heart">&#10084;</span> by Adrian and Kuba
                     </p>
                     <ul className="socials">
                         <li>
