@@ -152,8 +152,10 @@ function Login() {
                         window.location.href = '/';
                     }
                 });
-                setEmail('');
-                setPassword('');
+                if (response.data.icon !== 'warning') {
+                    setEmail('');
+                    setPassword('');
+                }
             } catch (error) {
                 Swal.close();
                 console.error('Error fetching data from backend:', error);

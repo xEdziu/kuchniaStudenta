@@ -20,6 +20,6 @@ class RecaptchaService
         if (!$responseData["success"]) {
             return false;
         }
-        return $responseData["score"] > 0.6;
+        return $responseData["score"] >= 0.6;
     }
 }

@@ -254,6 +254,7 @@ class AuthController extends AbstractController
                 "icon" => "warning",
                 "title" => "Botom wstęp wzbroniony",
                 "message" => "ReCaptcha nie została zweryfikowana",
+                "footer" => "Spróbuj ponownie",
             ];
             $this->res->setContent(json_encode($response));
             return $this->res;
@@ -496,6 +497,5 @@ class AuthController extends AbstractController
 
         $this->res->setContent(json_encode($response));
         return $this->res;
-
     }
 }
