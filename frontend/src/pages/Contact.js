@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Asis from '../assets/images/contact.svg';
 import axios from 'axios';
+import ReactRecaptcha3 from 'react-google-recaptcha3';
 import Swal from 'sweetalert2';
 
 const ContactStyles = styled.div`
@@ -101,9 +102,32 @@ function Contact() {
     const [email, setEmail] = useState('');
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
+    const [token, setToken] = useState('');
+
+    useEffect(() => {
+        ReactRecaptcha3.init(process.env.REACT_APP_SITE_KEY).then(
+            (status) => {
+                console.log(status);
+            }
+        );
+    }, [])
 
     const handleSubmit = (event) => {
         event.preventDefault();
+        ReactRecaptcha3.getToken().then(
+            (token) => {
+                setToken(token);
+                if (token === undefined) {
+                    Swal.fire({
+                        title: 'Błąd!',
+                        text: 'Potwierdź, że nie jesteś robotem!',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                    return;
+                }
+            }
+        );
         const fetchData = async () => {
             Swal.fire({
                 title: 'Proszę czekać',
@@ -118,7 +142,8 @@ function Contact() {
                     `https://${process.env.REACT_APP_SYMFONY}/api/contact`, {
                     email: email,
                     title: title,
-                    message: content
+                    message: content,
+                    token: token
                 });
                 Swal.close();
                 Swal.fire({

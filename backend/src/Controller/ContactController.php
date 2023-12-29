@@ -23,7 +23,8 @@ class ContactController extends AbstractController
         "https://kuchnia-studenta.webace-group.dev"
     ];
 
-    public function __construct(Mailer $mailer, RecaptchaService $recaptchaService) {
+    public function __construct(Mailer $mailer, RecaptchaService $recaptchaService)
+    {
         $this->mailer = $mailer;
         $this->recaptchaService = $recaptchaService;
         $this->res = new Response();
@@ -45,8 +46,8 @@ class ContactController extends AbstractController
         if (!$this->recaptchaService->verify($token)) {
             $response = [
                 "icon" => "warning",
-                "title" => "Chyba coś poszło nie tak",
-                "message" => "Niepoprawny token",
+                "title" => "Botom wstęp wzbroniony",
+                "message" => "ReCaptcha nie została zweryfikowana",
             ];
             $this->res->setContent(json_encode($response));
             return $this->res;

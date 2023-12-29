@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Guard from '../assets/images/guard.svg';
 import axios from 'axios';
+import ReactRecaptcha3 from 'react-google-recaptcha3';
 import Swal from 'sweetalert2';
 
 const RegisterStyles = styled.div`
@@ -99,9 +100,32 @@ function Register() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [passwordCheck, setPasswordCheck] = useState('');
+    const [token, setToken] = useState('');
+
+    useEffect(() => {
+        ReactRecaptcha3.init(process.env.REACT_APP_SITE_KEY).then(
+            (status) => {
+                console.log(status);
+            }
+        );
+    }, [])
 
     const handleSubmit = (event) => {
         event.preventDefault();
+        ReactRecaptcha3.getToken().then(
+            (token) => {
+                setToken(token);
+                if (token === undefined) {
+                    Swal.fire({
+                        title: 'Błąd!',
+                        text: 'Potwierdź, że nie jesteś robotem!',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                    return;
+                }
+            }
+        );
         if (password !== passwordCheck) {
             Swal.fire({
                 title: 'Błąd!',
@@ -125,7 +149,7 @@ function Register() {
         const fetchData = async () => {
             Swal.fire({
                 title: 'Proszę czekać',
-                text: 'Trwa logowanie...',
+                text: 'Trwa rejestrowanie...',
                 icon: "info",
                 allowOutsideClick: false,
             });
@@ -133,7 +157,8 @@ function Register() {
                 const response = await axios.post(`https://${process.env.REACT_APP_SYMFONY}/api/register`, {
                     name: name,
                     email: email,
-                    pwd1: password
+                    pwd1: password,
+                    token: token
                 });
                 Swal.close();
                 Swal.fire({

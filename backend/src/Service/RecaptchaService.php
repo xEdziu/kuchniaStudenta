@@ -15,8 +15,7 @@ class RecaptchaService
     public function verify(string $response): bool
     {
         $res = file_get_contents($this->verifyUrl . '?secret=' . $this->secretKey . '&response=' . $response);
-        $responseData = json_decode($res);
-        return $responseData->score >= 0.5;
+        $responseData = json_decode($res, true);
+        return $responseData["score"] > 0.6;
     }
-
 }

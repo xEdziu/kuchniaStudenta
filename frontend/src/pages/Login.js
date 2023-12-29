@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Guard from '../assets/images/guard.svg';
+import axios from 'axios';
+import ReactRecaptcha3 from 'react-google-recaptcha3';
+import Swal from 'sweetalert2';
 
 const LoginStyles = styled.div`
     display: flex;
@@ -95,10 +98,63 @@ function Login() {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [token, setToken] = useState('');
+
+    useEffect(() => {
+        ReactRecaptcha3.init(process.env.REACT_APP_SITE_KEY).then(
+            (status) => {
+                console.log(status);
+            }
+        );
+    }, [])
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        console.log('submit');
+        ReactRecaptcha3.getToken().then(
+            (token) => {
+                setToken(token);
+                if (token === undefined) {
+                    Swal.fire({
+                        title: 'Błąd!',
+                        text: 'Potwierdź, że nie jesteś robotem!',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                    return;
+                }
+            }
+        );
+
+        const fetchData = async () => {
+            Swal.fire({
+                title: 'Proszę czekać',
+                text: 'Trwa logowanie...',
+                icon: "info",
+                allowOutsideClick: false,
+            });
+            try {
+                const response = await axios.post(`https://${process.env.REACT_APP_SYMFONY}/api/login`, {
+                    email: email,
+                    password: password,
+                    token: token
+                });
+                Swal.close();
+                Swal.fire({
+                    title: response.data.title,
+                    text: response.data.message,
+                    icon: response.data.icon,
+                    footer: response.data.footer,
+                    confirmButtonText: 'OK'
+                });
+                setEmail('');
+                setPassword('');
+            } catch (error) {
+                Swal.close();
+                console.error('Error fetching data from backend:', error);
+            }
+        };
+
+        fetchData();
     }
 
     return (

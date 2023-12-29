@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Service\Mailer;
+use App\Service\RecaptchaService;
 use Doctrine\ORM\EntityManagerInterface;
 use Random\RandomException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,7 +17,7 @@ class AuthController extends AbstractController
 
     private EntityManagerInterface $entityManagerInterface;
     private Mailer $mailer;
-
+    private RecaptchaService $recaptchaService;
     private Response $res;
 
     private array $hosts = [
@@ -27,9 +28,12 @@ class AuthController extends AbstractController
 
     public function __construct(
         EntityManagerInterface $entityManagerInterface,
-        Mailer $mailer) {
+        Mailer $mailer,
+        RecaptchaService $recaptchaService
+    ) {
         $this->entityManagerInterface = $entityManagerInterface;
         $this->mailer = $mailer;
+        $this->recaptchaService = $recaptchaService;
         $this->res = new Response();
         foreach ($this->hosts as $host) {
             $this->res->headers->set('Access-Control-Allow-Origin', $host);
@@ -45,6 +49,17 @@ class AuthController extends AbstractController
         $username = $data['name'];
         $email = filter_var($data['email'], FILTER_VALIDATE_EMAIL);
         $pwd1 = $data['pwd1'];
+        $token = $data['token'];
+
+        if (!$this->recaptchaService->verify($token)) {
+            $response = [
+                "icon" => "warning",
+                "title" => "Botom wstęp wzbroniony",
+                "message" => "ReCaptcha nie została zweryfikowana",
+            ];
+            $this->res->setContent(json_encode($response));
+            return $this->res;
+        }
 
         if (strlen($username) < 3 || strlen($username) > 50) {
             $response = [
@@ -232,6 +247,17 @@ class AuthController extends AbstractController
 
         $email = $data['email'];
         $password = $data['password'];
+        $token = $data['token'];
+
+        if (!$this->recaptchaService->verify($token)) {
+            $response = [
+                "icon" => "warning",
+                "title" => "Botom wstęp wzbroniony",
+                "message" => "ReCaptcha nie została zweryfikowana",
+            ];
+            $this->res->setContent(json_encode($response));
+            return $this->res;
+        }
 
         $user = $this->entityManagerInterface->getRepository(User::class)->findOneBy(['email' => $email]);
 
@@ -265,7 +291,7 @@ class AuthController extends AbstractController
             return $this->res;
         }
 
-        if (!$user->getActive()) {
+        if (!$user->isActive()) {
             $response = [
                 "icon" => "warning",
                 "title" => "Chyba coś poszło nie tak",
