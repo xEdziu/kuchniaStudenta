@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Service\Mailer;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,6 +13,8 @@ class ContactController extends AbstractController
 
     private Mailer $mailer;
 
+    private Response $res;
+
     private array $hosts = [
         "http://localhost:3000",
         "https://localhost:3000",
@@ -22,16 +23,15 @@ class ContactController extends AbstractController
 
     public function __construct(Mailer $mailer) {
         $this->mailer = $mailer;
+        $this->res = new Response();
+        foreach ($this->hosts as $host) {
+            $this->res->headers->set('Access-Control-Allow-Origin', $host);
+        }
+        $this->res->headers->set('Access-Control-Allow-Methods', 'POST');
     }
     #[Route('/api/contact', name: 'app_contact', methods: ['POST'])]
     public function contact(Request $request): Response
     {
-        $res = new Response();
-        foreach ($this->hosts as $host) {
-            $res->headers->set('Access-Control-Allow-Origin', $host);
-        }
-        $res->headers->set('Access-Control-Allow-Methods', 'POST');
-
         $data = json_decode($request->getContent(), true);
 
         $email = filter_var($data['email'], FILTER_VALIDATE_EMAIL);
@@ -44,15 +44,15 @@ class ContactController extends AbstractController
                 "title" => "Chyba coś poszło nie tak",
                 "message" => "Niepoprawny adres email",
             ];
-            $res->setContent(json_encode($response));
-            return $res;
+            $this->res->setContent(json_encode($response));
+            return $this->res;
         }
 
         for ($i = 0; $i < 3; $i++) {
             $response = $this->mailer->sendContactMail($email, $title, $message);
             if ($response['icon'] == "success") {
-                $res->setContent(json_encode($response));
-                return $res;
+                $this->res->setContent(json_encode($response));
+                return $this->res;
             }
         }
 
@@ -67,7 +67,7 @@ class ContactController extends AbstractController
             ]
         ];
 
-        $res->setContent(json_encode($response));
-        return $res;
+        $this->res->setContent(json_encode($response));
+        return $this->res;
     }
 }

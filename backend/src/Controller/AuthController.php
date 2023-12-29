@@ -17,6 +17,8 @@ class AuthController extends AbstractController
     private EntityManagerInterface $entityManagerInterface;
     private Mailer $mailer;
 
+    private Response $res;
+
     private array $hosts = [
         "http://localhost:3000",
         "https://localhost:3000",
@@ -28,18 +30,16 @@ class AuthController extends AbstractController
         Mailer $mailer) {
         $this->entityManagerInterface = $entityManagerInterface;
         $this->mailer = $mailer;
+        $this->res = new Response();
+        foreach ($this->hosts as $host) {
+            $this->res->headers->set('Access-Control-Allow-Origin', $host);
+        }
+        $this->res->headers->set('Access-Control-Allow-Methods', 'POST');
     }
 
     #[Route('/api/register', name: 'app_auth_register', methods: ['POST'])]
     public function register(Request $request): Response
     {
-
-        $res = new Response();
-        foreach ($this->hosts as $host) {
-            $res->headers->set('Access-Control-Allow-Origin', $host);
-        }
-        $res->headers->set('Access-Control-Allow-Methods', 'POST');
-
         $data = json_decode($request->getContent(), true);
 
         $username = $data['name'];
@@ -53,8 +53,8 @@ class AuthController extends AbstractController
                 "message" => "Nazwa użytkownika musi mieć od 3 do 50 znaków",
 
             ];
-            $res->setContent(json_encode($response));
-            return $res;
+            $this->res->setContent(json_encode($response));
+            return $this->res;
         }
 
         if (!$email) {
@@ -63,8 +63,8 @@ class AuthController extends AbstractController
                 "title" => "Chyba coś poszło nie tak",
                 "message" => "Niepoprawny adres email",
             ];
-            $res->setContent(json_encode($response));
-            return $res;
+            $this->res->setContent(json_encode($response));
+            return $this->res;
         }
 
         if (strlen($pwd1) < 8 || strlen($pwd1) > 50) {
@@ -73,8 +73,8 @@ class AuthController extends AbstractController
                 "title" => "Chyba coś poszło nie tak",
                 "message" => "Hasło musi mieć od 8 do 50 znaków",
             ];
-            $res->setContent(json_encode($response));
-            return $res;
+            $this->res->setContent(json_encode($response));
+            return $this->res;
         }
 
         $user = $this->entityManagerInterface->getRepository(User::class)->findOneBy(['username' => $username]);
@@ -86,8 +86,8 @@ class AuthController extends AbstractController
                 "title" => "Chyba coś poszło nie tak",
                 "message" => "Nazwa użytkownika jest już zajęta",
             ];
-            $res->setContent(json_encode($response));
-            return $res;
+            $this->res->setContent(json_encode($response));
+            return $this->res;
         }
 
         $user = $this->entityManagerInterface->getRepository(User::class)->findOneBy(['email' => $email]);
@@ -98,8 +98,8 @@ class AuthController extends AbstractController
                 "title" => "Chyba coś poszło nie tak",
                 "message" => "Email jest już zajęty",
             ];
-            $res->setContent(json_encode($response));
-            return $res;
+            $this->res->setContent(json_encode($response));
+            return $this->res;
         }
 
         $new_password = password_hash($pwd1, PASSWORD_ARGON2ID);
@@ -116,8 +116,8 @@ class AuthController extends AbstractController
                     "error" => $e->getMessage()
                 ]
             ];
-            $res->setContent(json_encode($response));
-            return $res;
+            $this->res->setContent(json_encode($response));
+            return $this->res;
         }
 
         if (!password_verify($pwd1, $new_password)) {
@@ -127,8 +127,8 @@ class AuthController extends AbstractController
                 "message" => "Nie udało się zahashować hasła",
                 "footer" => "Skontaktuj się z administratorem",
             ];
-            $res->setContent(json_encode($response));
-            return $res;
+            $this->res->setContent(json_encode($response));
+            return $this->res;
         }
 
         $user = new User();
@@ -162,20 +162,13 @@ class AuthController extends AbstractController
         ];
 
 
-        $res->setContent(json_encode($response));
-        return $res;
+        $this->res->setContent(json_encode($response));
+        return $this->res;
     }
 
     #[Route('/api/activate/{activate}', name: 'app_auth_activate', methods: ['POST'])]
     public function activate(string $activate): Response
     {
-
-        $res = new Response();
-        foreach ($this->hosts as $host) {
-            $res->headers->set('Access-Control-Allow-Origin', $host);
-        }
-        $res->headers->set('Access-Control-Allow-Methods', 'POST');
-
         $user = $this->entityManagerInterface->getRepository(User::class)->findOneBy([
             'hash' => $activate,
             'active' => false
@@ -191,8 +184,8 @@ class AuthController extends AbstractController
                     "code" => 403,
                 ]
             ];
-            $res->setContent(json_encode($response));
-            return $res;
+            $this->res->setContent(json_encode($response));
+            return $this->res;
         }
 
         $user->setActive(true);
@@ -210,8 +203,8 @@ class AuthController extends AbstractController
                     "code" => 502,
                 ]
             ];
-            $res->setContent(json_encode($response));
-            return $res;
+            $this->res->setContent(json_encode($response));
+            return $this->res;
         }
 
         $this->entityManagerInterface->persist($user);
@@ -228,19 +221,13 @@ class AuthController extends AbstractController
             ]
         ];
 
-        $res->setContent(json_encode($response));
-        return $res;
+        $this->res->setContent(json_encode($response));
+        return $this->res;
     }
 
     #[Route('/api/login', name: 'app_auth_login', methods: ['POST'])]
     public function login(Request $request): Response
     {
-        $res = new Response();
-        foreach ($this->hosts as $host) {
-            $res->headers->set('Access-Control-Allow-Origin', $host);
-        }
-        $res->headers->set('Access-Control-Allow-Methods', 'POST');
-
         $data = json_decode($request->getContent(), true);
 
         $email = $data['email'];
@@ -259,8 +246,8 @@ class AuthController extends AbstractController
                     "code" => 401,
                 ]
             ];
-            $res->setContent(json_encode($response));
-            return $res;
+            $this->res->setContent(json_encode($response));
+            return $this->res;
         }
 
         if (!password_verify($password, $user->getPassword())) {
@@ -274,8 +261,8 @@ class AuthController extends AbstractController
                     "code" => 401,
                 ]
             ];
-            $res->setContent(json_encode($response));
-            return $res;
+            $this->res->setContent(json_encode($response));
+            return $this->res;
         }
 
         if (!$user->getActive()) {
@@ -289,8 +276,8 @@ class AuthController extends AbstractController
                     "code" => 403,
                 ]
             ];
-            $res->setContent(json_encode($response));
-            return $res;
+            $this->res->setContent(json_encode($response));
+            return $this->res;
         }
 
         $response = [
@@ -304,7 +291,7 @@ class AuthController extends AbstractController
             ]
         ];
 
-        $res->setContent(json_encode($response));
-        return $res;
+        $this->res->setContent(json_encode($response));
+        return $this->res;
     }
 }

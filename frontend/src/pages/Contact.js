@@ -150,19 +150,19 @@ function Contact() {
                     <form onSubmit={handleSubmit} encType='multipart/form-data'>
                         <input
                             type="email"
-                            placeholder="Email"
+                            placeholder="Twój adres email"
                             value={email}
                             onChange={(event) => setEmail(event.target.value)}
                         />
                         <input
                             type="text"
-                            placeholder="Tytuł"
+                            placeholder="Temat wiadomości"
                             value={title}
                             onChange={(event) => setTitle(event.target.value)}
                         />
                         <textarea
                             type="text"
-                            placeholder="Wiadomość"
+                            placeholder="Treść wiadomości"
                             value={content}
                             onChange={(event) => setContent(event.target.value)}
                         />
