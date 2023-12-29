@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
 
 const ActivateStyles = styled.div`
     display: flex;
@@ -13,20 +15,43 @@ const ActivateStyles = styled.div`
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        h1 {
-            font-size: 2rem;
-            margin-bottom: 2rem;
+        .obj{
+            width:50%;
+            background-color: white;
+            padding: 3rem;
+            border-radius: 5px;
+            box-shadow: 0 5px 5px rgba(0,0,0,0.1);
+            h3 {
+                margin: 1rem 0;
+                font-size: 1.6rem;
+                text-align: center;
+            }
         }
     }
+    
 `;
 
 function Activate() {
-
+    const { token } = useParams();
+    const [data, setData] = useState("");
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.post(`https://${process.env.REACT_APP_SYMFONY}/api/activate/${token}`);
+                console.log(response);
+                setData(response.data.message);
+            } catch (error) {
+                console.error('Error fetching data from backend:', error);
+            }
+        };
+        fetchData();
+    }, [token]);
     return (
         <ActivateStyles>
             <div className="container">
-                <h1>Kontakt</h1>
-                <p></p>
+                <div className='obj'>
+                    <h3>{data}</h3>
+                </div>
             </div>
         </ActivateStyles>
     );

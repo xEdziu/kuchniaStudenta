@@ -70,8 +70,8 @@ class Mailer
         try {
             $this->mail->addAddress($email);
             $this->mail->Subject = "Aktywacja konta | Kuchnia Studenta";
-            $this->mail->Body = "Witaj, aby aktywować konto kliknij w poniższy link: <br><br><a href='http://localhost:3000/activate?hash=$hash'>Aktywuj konto</a>";
-            $this->mail->AltBody = "Witaj, aby aktywować konto kliknij w poniższy link: <br><br><a href='http://localhost:3000/activate?hash=$hash'>Aktywuj konto</a>";
+            $this->mail->Body = "Witaj, aby aktywować konto kliknij w poniższy link: <br><br><a href='http://localhost:3000/activate/$hash'>Aktywuj konto</a>";
+            $this->mail->AltBody = "Witaj, aby aktywować konto kliknij w poniższy link: <br><br><a href='http://localhost:3000/activate/$hash'>Aktywuj konto</a>";
             if ($this->mail->send()) {
                 $response = [
                     "icon" => "success",
@@ -109,8 +109,8 @@ class Mailer
         return $response;
     }
 
-    public static function postAutoloadDump(): void {
+    public static function postAutoloadDump(): void
+    {
         require_once __DIR__ . '/../../vendor/autoload.php';
     }
-
 }

@@ -17,15 +17,16 @@ class AuthController extends AbstractController
 {
 
     private EntityManagerInterface $entityManagerInterface;
-//    private ImageConverter $imageConverter;
+    //    private ImageConverter $imageConverter;
     private Mailer $mailer;
 
-    public function __construct(EntityManagerInterface $entityManagerInterface,
-//                    ImageConverter $imageConverter,
-                    Mailer $mailer)
-    {
+    public function __construct(
+        EntityManagerInterface $entityManagerInterface,
+        //                    ImageConverter $imageConverter,
+        Mailer $mailer
+    ) {
         $this->entityManagerInterface = $entityManagerInterface;
-//        $this->imageConverter = $imageConverter;
+        //        $this->imageConverter = $imageConverter;
         $this->mailer = $mailer;
     }
 
@@ -53,7 +54,7 @@ class AuthController extends AbstractController
 
             ];
             $res->setContent(json_encode($response));
-            return $res;   
+            return $res;
         }
 
         if (!$email) {
@@ -112,25 +113,25 @@ class AuthController extends AbstractController
         // }
 
 
-//        if ($image['error'] == 0) {
-//            $filename = $image['name'] . '_' . uniqid() . '.webp';
-//            $convert = $this->imageConverter->convertToWebp($image['pathname'],
-//                '../../../frontend/public/src/assets/images/users/'. $filename);
-//        }
-//
-//        if ($convert != null && !$convert['success']) {
-//            $response = [
-//                "icon" => "error",
-//                "title" => "Chyba coś poszło nie tak",
-//                "message" => "Nie udało się przesłać zdjęcia",
-//                "footer" => $convert['error'],
-//            ];
-//            return $this->json($response);
-//        }
-//
-//        if ($convert != null && $convert['success']) {
-//            $filename = $convert['path'];
-//        }
+        //        if ($image['error'] == 0) {
+        //            $filename = $image['name'] . '_' . uniqid() . '.webp';
+        //            $convert = $this->imageConverter->convertToWebp($image['pathname'],
+        //                '../../../frontend/public/src/assets/images/users/'. $filename);
+        //        }
+        //
+        //        if ($convert != null && !$convert['success']) {
+        //            $response = [
+        //                "icon" => "error",
+        //                "title" => "Chyba coś poszło nie tak",
+        //                "message" => "Nie udało się przesłać zdjęcia",
+        //                "footer" => $convert['error'],
+        //            ];
+        //            return $this->json($response);
+        //        }
+        //
+        //        if ($convert != null && $convert['success']) {
+        //            $filename = $convert['path'];
+        //        }
 
         $new_password = password_hash($pwd1, PASSWORD_ARGON2ID);
 
@@ -173,9 +174,9 @@ class AuthController extends AbstractController
         $this->entityManagerInterface->flush();
 
 
-        for ($i = 0; $i < 3; $i++){
+        for ($i = 0; $i < 3; $i++) {
             $response = $this->mailer->sendActivationMail($email, $activation_hash);
-            if ($response['data']['code'] === 0){
+            if ($response['data']['code'] === 0) {
                 break;
             }
         }
@@ -190,23 +191,24 @@ class AuthController extends AbstractController
                 "code" => 0,
             ]
         ];
-        
+
 
         $res->setContent(json_encode($response));
         return $res;
     }
 
     #[Route('/api/activate/{activate}', name: 'app_auth_activate', methods: ['POST'])]
-    public function activate(string $activate) : Response {
+    public function activate(string $activate): Response
+    {
 
         $res = new Response();
         $res->headers->set('Access-Control-Allow-Origin', 'http://localhost:3000');
         $res->headers->set('Access-Control-Allow-Methods', 'POST');
 
         $user = $this->entityManagerInterface->getRepository(User::class)->findOneBy([
-                'hash' => $activate,
-                'active' => false
-            ]);
+            'hash' => $activate,
+            'active' => false
+        ]);
 
         if (!$user) {
             $response = [

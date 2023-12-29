@@ -82,10 +82,10 @@ export default function Nav() {
     return (
         <NavStyles className={scrolled ? 'scrolled' : ''}>
             <div className="container">
-                <NavLink to="/" exact><img src={logo} alt="logo" className="logo" /></NavLink>
+                <NavLink to="/"><img src={logo} alt="logo" className="logo" /></NavLink>
                 <ul>
                     <li>
-                        <NavLink to="/" exact>Strona Główna</NavLink>
+                        <NavLink to="/">Strona Główna</NavLink>
                     </li>
                     <li>
                         <NavLink to="/recipes">Przepisy</NavLink>

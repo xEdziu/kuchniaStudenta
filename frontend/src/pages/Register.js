@@ -102,7 +102,7 @@ function Register() {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        if(password !== passwordCheck) {
+        if (password !== passwordCheck) {
             Swal.fire({
                 title: 'Błąd!',
                 text: 'Hasła nie są takie same!',
@@ -112,7 +112,7 @@ function Register() {
             return;
         }
 
-        if(password.length < 8) {
+        if (password.length < 8) {
             Swal.fire({
                 title: 'Błąd!',
                 text: 'Hasło musi mieć minimum 8 znaków!',
@@ -121,15 +121,21 @@ function Register() {
             });
             return;
         }
-        
+
         const fetchData = async () => {
+            Swal.fire({
+                title: 'Proszę czekać',
+                text: 'Trwa logowanie...',
+                icon: "info",
+                allowOutsideClick: false,
+            });
             try {
                 const response = await axios.post(`https://${process.env.REACT_APP_SYMFONY}/api/register`, {
                     name: name,
                     email: email,
                     pwd1: password
                 });
-                console.log(response);
+                Swal.close();
                 Swal.fire({
                     title: response.data.title,
                     text: response.data.message,
@@ -142,6 +148,7 @@ function Register() {
                 setPassword('');
                 setPasswordCheck('');
             } catch (error) {
+                Swal.close();
                 console.error('Error fetching data from backend:', error);
             }
         };
@@ -187,7 +194,7 @@ function Register() {
             <div className="image-container">
                 <img src={Guard} alt="Guard" />
             </div>
-        </RegisterStyles>
+        </RegisterStyles >
     );
 }
 
