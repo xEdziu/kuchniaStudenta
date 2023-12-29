@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Service\Mailer;
+use App\Service\RecaptchaService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,6 +15,7 @@ class ContactController extends AbstractController
     private Mailer $mailer;
 
     private Response $res;
+    private RecaptchaService $recaptchaService;
 
     private array $hosts = [
         "http://localhost:3000",
@@ -21,8 +23,9 @@ class ContactController extends AbstractController
         "https://kuchnia-studenta.webace-group.dev"
     ];
 
-    public function __construct(Mailer $mailer) {
+    public function __construct(Mailer $mailer, RecaptchaService $recaptchaService) {
         $this->mailer = $mailer;
+        $this->recaptchaService = $recaptchaService;
         $this->res = new Response();
         foreach ($this->hosts as $host) {
             $this->res->headers->set('Access-Control-Allow-Origin', $host);
@@ -37,6 +40,17 @@ class ContactController extends AbstractController
         $email = filter_var($data['email'], FILTER_VALIDATE_EMAIL);
         $title = $data['title'];
         $message = $data['message'];
+        $token = $data['token'];
+
+        if (!$this->recaptchaService->verify($token)) {
+            $response = [
+                "icon" => "warning",
+                "title" => "Chyba coś poszło nie tak",
+                "message" => "Niepoprawny token",
+            ];
+            $this->res->setContent(json_encode($response));
+            return $this->res;
+        }
 
         if (!$email) {
             $response = [

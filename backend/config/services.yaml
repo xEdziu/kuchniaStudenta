@@ -9,6 +9,7 @@ parameters:
     mail.port: '%env(MAILER_PORT)%'
     mail.user: '%env(USER_SMTP)%'
     mail.password: '%env(PASS_SMTP)%'
+    recaptcha.server.key: '%env(RECAPTCHA_SERVER_KEY)%'
 
 services:
     # default configuration for services in *this* file
@@ -36,3 +37,8 @@ services:
             $port: '%mail.port%'
             $username: '%mail.user%'
             $password: '%mail.password%'
+
+    App\Service\RecaptchaService:
+        autowire: true
+        arguments:
+            $serverKey: '%recaptcha.server.key%'
