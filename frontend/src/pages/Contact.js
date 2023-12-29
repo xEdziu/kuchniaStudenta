@@ -1,32 +1,140 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
+import Asis from '../assets/images/contact.svg';
 
 const ContactStyles = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 80vh;
+    height: 90vh;
     .container {
-        width: 50%;
+        width: 40%;
         height: 100%;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        h1 {
-            font-size: 2rem;
-            margin-bottom: 2rem;
+        .form-container {
+            width:70%;
+            background-color: white;
+            padding: 3rem;
+            border-radius: 5px;
+            box-shadow: 0 5px 5px rgba(0,0,0,0.1);
+            h1 {
+                font-size: 2rem;
+                margin-bottom: 2rem;
+            }
+            form {
+                display: flex;
+                flex-direction: column;
+                input, textarea {
+                    border: none;
+                    font-size: 1.1rem;
+                    font-family: 'Lato', sans-serif;
+                    border-bottom: 1px solid var(--dark);
+                    padding: 0.5rem;
+                    margin-bottom: 1.5rem;
+                    background-color: transparent;
+                    resize: vertical;
+                    max-height: 300px;
+                    min-height: 38px;
+                    &:focus {
+                        outline: none;
+                    }
+                }
+                button {
+                    border: 1px solid var(--accent);
+                    padding: 0.8rem;
+                    font-size: 1.1rem;
+                    background-color: var(--accent);
+                    color: white;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    &:hover {
+                        background-color: transparent;
+                        color: var(--accent);
+                    }
+                }
+            }
+            .req {
+                margin-top: 1rem;
+                a {
+                    color: var(--accent);
+                    text-decoration: none;
+                    font-weight: 600;
+                    &:hover {
+                        text-decoration: underline;
+                    }
+                }
+            }
         }
     }
+    .image-container {
+        width: 60%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        img {
+            width: 70%;
+            height: auto;
+        }
+    }
+    @media only screen and (max-width: 768px) {
+        flex-direction: column;
+        height: auto;
+        .container {
+            width: 100%;
+            .form-container {
+                width: 100%;
+            }
+        }
+        .image-container {
+            width: 100%;
+        }
+    }
+
 `;
 
 function Contact() {
+    const [email, setEmail] = useState('');
+    const [title, setTitle] = useState('');
+    const [content, setContent] = useState('');
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        console.log('submit');
+    }
 
     return (
         <ContactStyles>
             <div className="container">
-                <h1>Kontakt</h1>
-                <p></p>
+                <div className="form-container">
+                    <h1>Kontakt</h1>
+                    <form onSubmit={handleSubmit} encType='multipart/form-data'>
+                        <input
+                            type="email"
+                            placeholder="Email"
+                            value={email}
+                            onChange={(event) => setEmail(event.target.value)}
+                        />
+                        <input
+                            type="text"
+                            placeholder="Tytuł"
+                            value={title}
+                            onChange={(event) => setTitle(event.target.value)}
+                        />
+                        <textarea
+                            type="text"
+                            placeholder="Wiadomość"
+                            value={content}
+                            onChange={(event) => setContent(event.target.value)}
+                        />
+                        <button type="submit">Wyślij</button>
+                    </form>
+                </div>
+            </div>
+            <div className="image-container">
+                <img src={Asis} alt="Asistent" />
             </div>
         </ContactStyles>
     );
