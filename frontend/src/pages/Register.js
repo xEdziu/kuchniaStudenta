@@ -122,15 +122,25 @@ function Register() {
             return;
         }
         
-        console.log('submit');
         const fetchData = async () => {
             try {
-                const response = await axios.post(`http://${process.env.REACT_APP_SYMFONY}/api/register`, {
+                const response = await axios.post(`https://${process.env.REACT_APP_SYMFONY}/api/register`, {
                     name: name,
                     email: email,
                     pwd1: password
                 });
                 console.log(response);
+                Swal.fire({
+                    title: response.data.title,
+                    text: response.data.message,
+                    icon: response.data.icon,
+                    footer: response.data.footer,
+                    confirmButtonText: 'OK'
+                });
+                setName('');
+                setEmail('');
+                setPassword('');
+                setPasswordCheck('');
             } catch (error) {
                 console.error('Error fetching data from backend:', error);
             }

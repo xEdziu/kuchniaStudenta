@@ -8,6 +8,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Account from './pages/Account';
 import Contact from './pages/Contact';
+import Activate from './pages/Activate';
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
           <Route path="/recipes" element={<Recipes />}></Route>
           <Route path="/login" element={<Login />}></Route>
           <Route path="/register" element={<Register />}></Route>
+          <Route path="/activate/:token" element={<Activate />}></Route>
           <Route path="/contact" element={<Contact />}></Route>
           <Route path="/account" element={<Account />}></Route>
           <Route path="/" exact element={<Home />}></Route>
