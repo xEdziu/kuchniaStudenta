@@ -10,26 +10,23 @@ class ImageConverter
      * Konwertuje zdjęcie na format .webp.
      *
      * @param string $inputPath Ścieżka do oryginalnego zdjęcia.
-     * @param string $outputPath Ścieżka do zapisanego zdjęcia .webp.
      *
-     * @return Response Czy konwersja zakończona sukcesem.
+     * @return Response Tablica z informacją o sukcesie konwersji, zwraca również skonwertowane zdjęcie w formacie base64.
      */
-    public function convertToWebp(string $inputPath, string $outputPath): Response
+    public function convertToWebp(string $inputPath): Response
     {
         $inputExtension = pathinfo($inputPath, PATHINFO_EXTENSION);
 
-        // Sprawdzanie, czy plik jest obsługiwany
         if (!in_array($inputExtension, ['jpg', 'jpeg', 'png'])) {
             return new Response(json_encode([
                 'success' => false,
-                'path' => null,
+                'data' => null,
                 'error' => 'Nieobsługiwany format pliku.'
             ]));
         }
 
         $image = null;
 
-        // Wczytywanie obrazu z oryginalnego pliku
         switch ($inputExtension) {
             case 'jpg':
             case 'jpeg':
@@ -40,24 +37,23 @@ class ImageConverter
                 break;
         }
 
-        // Sprawdzanie, czy obraz został poprawnie wczytany
         if (!$image) {
             return new Response(json_encode([
                 'success' => false,
-                'path' => null,
+                'data' => null,
                 'error' => 'Nie udało się wczytać obrazu.'
             ]));
         }
 
-        // Konwersja i zapisanie obrazu w formacie .webp
-        $success = imagewebp($image, $outputPath);
+        ob_start();
+        $success = imagewebp($image);
+        $webpData = ob_get_clean();
 
-        // Zwalnianie pamięci
         imagedestroy($image);
 
         return new Response(json_encode([
             'success' => $success,
-            'path' => $outputPath,
+            'data' => base64_encode($webpData),
             'error' => null
         ]));
     }

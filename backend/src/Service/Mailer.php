@@ -109,6 +109,62 @@ class Mailer
         return $response;
     }
 
+    /**
+     * Function to send contact mail
+     *
+     * @param string $email
+     * Email address to send contact mail
+     * @param string $title
+     * Title of contact mail
+     * @param string $message
+     * Message of contact mail
+     * @return array
+     * Response array: icon, title, message, footer, data [error, code]
+     */
+    public function sendContactMail(string $email, string $title, string $message): array
+    {
+        try {
+            $this->mail->addAddress($this->username);
+            $this->mail->Subject = "Kontakt | Kuchnia Studenta | $email";
+            $this->mail->Body = "Wiadomość od: $email <br><br> Temat: $title <br><br> Treść: $message";
+            $this->mail->AltBody = "Wiadomość od: $email <br><br> Temat: $title <br><br> Treść: $message";
+            if ($this->mail->send()) {
+                $response = [
+                    "icon" => "success",
+                    "title" => "Wysłano maila",
+                    "message" => "Niedługo otrzymasz odpowiedź na podany adres email",
+                    "data" => [
+                        "error" => null,
+                        "code" => 0,
+                    ]
+                ];
+            } else {
+                $response = [
+                    "icon" => "error",
+                    "title" => "Nie udało się wysłać maila",
+                    "message" => "Skontaktuj się z administratorem",
+                    "footer" => "Kod błędu: 901",
+                    "data" => [
+                        "error" => $this->mail->ErrorInfo,
+                        "code" => 901,
+                    ]
+                ];
+            }
+        } catch (Exception $e) {
+            $response = [
+                "icon" => "error",
+                "title" => "Nie udało się wysłać maila",
+                "message" => "Skontaktuj się z administratorem",
+                "footer" => "Kod błędu: 902",
+                "data" => [
+                    "error" => $e->getMessage(),
+                    "code" => 902,
+                ]
+            ];
+        }
+        return $response;
+    }
+
     public static function postAutoloadDump(): void
     {
         require_once __DIR__ . '/../../vendor/autoload.php';

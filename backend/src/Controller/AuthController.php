@@ -3,12 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\User;
-//use App\Service\ImageConverter;
 use App\Service\Mailer;
 use Doctrine\ORM\EntityManagerInterface;
 use Random\RandomException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,16 +15,18 @@ class AuthController extends AbstractController
 {
 
     private EntityManagerInterface $entityManagerInterface;
-    //    private ImageConverter $imageConverter;
     private Mailer $mailer;
+
+    private array $hosts = [
+        "http://localhost:3000",
+        "https://localhost:3000",
+        "https://kuchnia-studenta.webace-group.dev"
+    ];
 
     public function __construct(
         EntityManagerInterface $entityManagerInterface,
-        //                    ImageConverter $imageConverter,
-        Mailer $mailer
-    ) {
+        Mailer $mailer) {
         $this->entityManagerInterface = $entityManagerInterface;
-        //        $this->imageConverter = $imageConverter;
         $this->mailer = $mailer;
     }
 
@@ -35,8 +35,7 @@ class AuthController extends AbstractController
     {
 
         $res = new Response();
-        $res->headers->set('Access-Control-Allow-Origin', 'http://localhost:3000');
-        // $res->headers->set('Access-Control-Allow-Origin', '*');
+        $res->headers->set('Access-Control-Allow-Origin', $this->hosts);
         $res->headers->set('Access-Control-Allow-Methods', 'POST');
 
         $data = json_decode($request->getContent(), true);
@@ -44,7 +43,6 @@ class AuthController extends AbstractController
         $username = $data['name'];
         $email = filter_var($data['email'], FILTER_VALIDATE_EMAIL);
         $pwd1 = $data['pwd1'];
-        // $image = $request->files->get('image');
 
         if (strlen($username) < 3 || strlen($username) > 50) {
             $response = [
@@ -101,37 +99,6 @@ class AuthController extends AbstractController
             $res->setContent(json_encode($response));
             return $res;
         }
-
-
-        // if ($image == null) {
-        //     $filename = 'default.webp';
-        // } else {
-        //     $originalFilename = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
-        //     $filename = $originalFilename.'-'.uniqid().'.'.$image->guessExtension();
-        //     $destination = '../../../frontend/public/src/images/users/';
-        //     $image->move($destination, $filename);
-        // }
-
-
-        //        if ($image['error'] == 0) {
-        //            $filename = $image['name'] . '_' . uniqid() . '.webp';
-        //            $convert = $this->imageConverter->convertToWebp($image['pathname'],
-        //                '../../../frontend/public/src/assets/images/users/'. $filename);
-        //        }
-        //
-        //        if ($convert != null && !$convert['success']) {
-        //            $response = [
-        //                "icon" => "error",
-        //                "title" => "Chyba coś poszło nie tak",
-        //                "message" => "Nie udało się przesłać zdjęcia",
-        //                "footer" => $convert['error'],
-        //            ];
-        //            return $this->json($response);
-        //        }
-        //
-        //        if ($convert != null && $convert['success']) {
-        //            $filename = $convert['path'];
-        //        }
 
         $new_password = password_hash($pwd1, PASSWORD_ARGON2ID);
 
@@ -202,7 +169,7 @@ class AuthController extends AbstractController
     {
 
         $res = new Response();
-        $res->headers->set('Access-Control-Allow-Origin', 'http://localhost:3000');
+        $res->headers->set('Access-Control-Allow-Origin', $this->hosts);
         $res->headers->set('Access-Control-Allow-Methods', 'POST');
 
         $user = $this->entityManagerInterface->getRepository(User::class)->findOneBy([
@@ -265,7 +232,7 @@ class AuthController extends AbstractController
     public function login(Request $request): Response
     {
         $res = new Response();
-        $res->headers->set('Access-Control-Allow-Origin', 'http://localhost:3000');
+        $res->headers->set('Access-Control-Allow-Origin', $this->hosts);
         $res->headers->set('Access-Control-Allow-Methods', 'POST');
 
         $data = json_decode($request->getContent(), true);
