@@ -7,7 +7,7 @@ class RecaptchaService
     private string $secretKey;
     private string $verifyUrl = "https://www.google.com/recaptcha/api/siteverify";
 
-    public function __construct(string $response, string $serverKey,)
+    public function __construct(string $serverKey)
     {
         $this->secretKey = $serverKey;
     }
