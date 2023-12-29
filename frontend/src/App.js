@@ -10,6 +10,7 @@ import Account from './pages/Account';
 import Contact from './pages/Contact';
 import Activate from './pages/Activate';
 import Page404 from './pages/404';
+import Logout from './pages/Logout';
 
 export default function App() {
   return (
@@ -23,6 +24,7 @@ export default function App() {
           <Route path="/activate/:token" element={<Activate />}></Route>
           <Route path="/contact" element={<Contact />}></Route>
           <Route path="/account" element={<Account />}></Route>
+          <Route path="/logout" element={<Logout />}></Route>
           <Route path="/" element={<Home />}></Route>
           <Route path="*" element={<Page404 />}></Route>
         </Routes>

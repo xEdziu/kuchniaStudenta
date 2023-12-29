@@ -16,6 +16,10 @@ class RecaptchaService
     {
         $res = file_get_contents($this->verifyUrl . '?secret=' . $this->secretKey . '&response=' . $response);
         $responseData = json_decode($res, true);
+
+        if (!$responseData["success"]) {
+            return false;
+        }
         return $responseData["score"] > 0.6;
     }
 }

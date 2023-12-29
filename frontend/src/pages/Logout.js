@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 
-const RecipesStyles = styled.div`
+const LogoutStyles = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
@@ -20,14 +20,19 @@ const RecipesStyles = styled.div`
     }
 `;
 
-function Recipes() {
+const Logout = () => {
+    useEffect(() => {
+        localStorage.removeItem('sessionKey');
+        window.location.href = '/login';
+    }, []);
 
     return (
-        <RecipesStyles>
+        <LogoutStyles>
             <div className="container">
-                <h1>Przepisy</h1>
+                <h1>Wylogowywanie...</h1>
             </div>
-        </RecipesStyles>
+        </LogoutStyles>
     );
-}
-export default Recipes;
+};
+
+export default Logout;

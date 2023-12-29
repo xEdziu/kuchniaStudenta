@@ -94,7 +94,11 @@ export default function Nav() {
                         <NavLink to="/contact">Kontakt</NavLink>
                     </li>
                     <li>
-                        <NavLink to="/login">Logowanie</NavLink>
+                        {
+                            localStorage.getItem('sessionKey')
+                                ? <NavLink to="/logout">Wyloguj się</NavLink>
+                                : <NavLink to="/login">Logowanie</NavLink>
+                        }
                     </li>
                 </ul>
             </div>

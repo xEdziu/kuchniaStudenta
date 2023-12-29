@@ -145,6 +145,12 @@ function Login() {
                     icon: response.data.icon,
                     footer: response.data.footer,
                     confirmButtonText: 'OK'
+                }).then(() => {
+                    if (response.data.icon === 'success') {
+                        localStorage.setItem('sessionKey', btoa(JSON.stringify(response.data.username)));
+                        console.log(atob(localStorage.getItem('sessionKey')));
+                        window.location.href = '/';
+                    }
                 });
                 setEmail('');
                 setPassword('');
