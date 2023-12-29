@@ -125,7 +125,7 @@ class Mailer
     {
         try {
             $this->mail->addAddress($this->username);
-            $this->mail->Subject = "Kontakt | Kuchnia Studenta | $email";
+            $this->mail->Subject = "Kontakt | Kuchnia Studenta";
             $this->mail->Body = "Wiadomość od: $email <br><br> Temat: $title <br><br> Treść: $message";
             $this->mail->AltBody = "Wiadomość od: $email <br><br> Temat: $title <br><br> Treść: $message";
             if ($this->mail->send()) {

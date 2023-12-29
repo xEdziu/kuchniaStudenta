@@ -35,7 +35,9 @@ class AuthController extends AbstractController
     {
 
         $res = new Response();
-        $res->headers->set('Access-Control-Allow-Origin', $this->hosts);
+        foreach ($this->hosts as $host) {
+            $res->headers->set('Access-Control-Allow-Origin', $host);
+        }
         $res->headers->set('Access-Control-Allow-Methods', 'POST');
 
         $data = json_decode($request->getContent(), true);
@@ -169,7 +171,9 @@ class AuthController extends AbstractController
     {
 
         $res = new Response();
-        $res->headers->set('Access-Control-Allow-Origin', $this->hosts);
+        foreach ($this->hosts as $host) {
+            $res->headers->set('Access-Control-Allow-Origin', $host);
+        }
         $res->headers->set('Access-Control-Allow-Methods', 'POST');
 
         $user = $this->entityManagerInterface->getRepository(User::class)->findOneBy([
@@ -232,7 +236,9 @@ class AuthController extends AbstractController
     public function login(Request $request): Response
     {
         $res = new Response();
-        $res->headers->set('Access-Control-Allow-Origin', $this->hosts);
+        foreach ($this->hosts as $host) {
+            $res->headers->set('Access-Control-Allow-Origin', $host);
+        }
         $res->headers->set('Access-Control-Allow-Methods', 'POST');
 
         $data = json_decode($request->getContent(), true);

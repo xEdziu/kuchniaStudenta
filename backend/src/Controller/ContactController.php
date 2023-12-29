@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Service\Mailer;
 use Doctrine\ORM\EntityManagerInterface;
-use http\Client\Request;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -27,7 +27,9 @@ class ContactController extends AbstractController
     public function contact(Request $request): Response
     {
         $res = new Response();
-        $res->headers->set('Access-Control-Allow-Origin', $this->hosts);
+        foreach ($this->hosts as $host) {
+            $res->headers->set('Access-Control-Allow-Origin', $host);
+        }
         $res->headers->set('Access-Control-Allow-Methods', 'POST');
 
         $data = json_decode($request->getContent(), true);
@@ -48,7 +50,7 @@ class ContactController extends AbstractController
 
         for ($i = 0; $i < 3; $i++) {
             $response = $this->mailer->sendContactMail($email, $title, $message);
-            if ($response['success']) {
+            if ($response['icon'] == "success") {
                 $res->setContent(json_encode($response));
                 return $res;
             }

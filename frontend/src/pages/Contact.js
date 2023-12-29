@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import Asis from '../assets/images/contact.svg';
+import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const ContactStyles = styled.div`
     display: flex;
@@ -102,7 +104,42 @@ function Contact() {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        console.log('submit');
+        const fetchData = async () => {
+            Swal.fire({
+                title: 'Proszę czekać',
+                text: 'Wysyłamy wiadomość',
+                icon: "info",
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                showConfirmButton: false,
+            });
+            try {
+                const response = await axios.post(
+                    `https://${process.env.REACT_APP_SYMFONY}/api/contact`, {
+                    email: email,
+                    title: title,
+                    message: content
+                });
+                Swal.close();
+                Swal.fire({
+                    title: response.data.title,
+                    text: response.data.message,
+                    icon: response.data.icon,
+                    footer: response.data.footer,
+                    confirmButtonText: 'OK'
+                });
+            } catch (error) {
+                console.log(error);
+                Swal.close();
+                Swal.fire({
+                    title: 'Błąd!',
+                    text: 'Wystąpił błąd podczas wysyłania wiadomości!',
+                    icon: 'error',
+                    confirmButtonText: 'Spróbuj ponownie'
+                });
+            }
+        }
+        fetchData();
     }
 
     return (
