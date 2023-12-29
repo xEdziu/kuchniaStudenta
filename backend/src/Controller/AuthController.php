@@ -314,10 +314,188 @@ class AuthController extends AbstractController
             "data" => [
                 "error" => null,
                 "code" => 0,
+                "username" => $user->getUsername()
             ]
         ];
 
         $this->res->setContent(json_encode($response));
         return $this->res;
+    }
+
+    #[Route('/api/resetPassword', name: 'app_auth_reset_password', methods: ['POST'])]
+    public function resetPassword(Request $request): Response
+    {
+        $data = json_decode($request->getContent(), true);
+
+        $email = $data['email'];
+        $token = $data['token'];
+
+        if (!$this->recaptchaService->verify($token)) {
+            $response = [
+                "icon" => "warning",
+                "title" => "Botom wstęp wzbroniony",
+                "message" => "ReCaptcha nie została zweryfikowana",
+            ];
+            $this->res->setContent(json_encode($response));
+            return $this->res;
+        }
+
+        $user = $this->entityManagerInterface->getRepository(User::class)->findOneBy(['email' => $email]);
+
+        if (!$user) {
+            $response = [
+                "icon" => "warning",
+                "title" => "Chyba coś poszło nie tak",
+                "message" => "Niepoprawna dane",
+                "footer" => "Spróbuj ponownie",
+                "data" => [
+                    "error" => null,
+                    "code" => 401,
+                ]
+            ];
+            $this->res->setContent(json_encode($response));
+            return $this->res;
+        }
+
+        try {
+            $reset_hash = bin2hex(random_bytes(32));
+        } catch (RandomException $e) {
+            $response = [
+                "icon" => "error",
+                "title" => "Chyba coś poszło nie tak",
+                "message" => "Nie udało się wygenerować hasha resetującego",
+                "footer" => "Skontaktuj się z administratorem",
+                "data" => [
+                    "error" => $e->getMessage(),
+                    "code" => 502,
+                ]
+            ];
+            $this->res->setContent(json_encode($response));
+            return $this->res;
+        }
+
+        $user->setHash($reset_hash);
+
+        $this->entityManagerInterface->persist($user);
+        $this->entityManagerInterface->flush();
+
+        for ($i = 0; $i < 3; $i++) {
+            $response = $this->mailer->sendResetPasswordMail($email, $reset_hash);
+            if ($response['data']['code'] === 0) {
+                break;
+            }
+        }
+
+        $response = [
+            "icon" => "success",
+            "title" => "Sukces",
+            "message" => "Wysłano maila resetującego",
+            "footer" => "Sprawdź swoją skrzynkę odbiorczą",
+            "data" => [
+                "error" => null,
+                "code" => 0,
+            ]
+        ];
+
+        $this->res->setContent(json_encode($response));
+        return $this->res;
+    }
+
+    #[Route('/api/changePassword', name: 'app_auth_change_password', methods: ['POST'])]
+    public function changePassword(Request $request): Response
+    {
+        $data = json_decode($request->getContent(), true);
+
+        $password = $data['password'];
+        $hash = $data['hash'];
+        $token = $data['token'];
+
+        if (!$this->recaptchaService->verify($token)) {
+            $response = [
+                "icon" => "warning",
+                "title" => "Botom wstęp wzbroniony",
+                "message" => "ReCaptcha nie została zweryfikowana",
+            ];
+            $this->res->setContent(json_encode($response));
+            return $this->res;
+        }
+
+        if (strlen($password) < 8 || strlen($password) > 50) {
+            $response = [
+                "icon" => "warning",
+                "title" => "Chyba coś poszło nie tak",
+                "message" => "Hasło musi mieć od 8 do 50 znaków",
+            ];
+            $this->res->setContent(json_encode($response));
+            return $this->res;
+        }
+
+        $user = $this->entityManagerInterface->getRepository(User::class)->findOneBy(['hash' => $hash]);
+
+        if (!$user) {
+            $response = [
+                "icon" => "error",
+                "title" => "Chyba coś poszło nie tak",
+                "message" => "Link resetujący jest nieważny",
+                "data" => [
+                    "error" => null,
+                    "code" => 403,
+                ]
+            ];
+            $this->res->setContent(json_encode($response));
+            return $this->res;
+        }
+
+        $new_password = password_hash($password, PASSWORD_ARGON2ID);
+
+        if (!password_verify($password, $new_password)) {
+            $response = [
+                "icon" => "error",
+                "title" => "Chyba coś poszło nie tak",
+                "message" => "Nie udało się zahashować hasła",
+                "footer" => "Skontaktuj się z administratorem",
+            ];
+            $this->res->setContent(json_encode($response));
+            return $this->res;
+        }
+
+        $user->setPassword($new_password);
+
+        try {
+            $new_hash = bin2hex(random_bytes(32));
+        } catch (RandomException $e) {
+            $response = [
+                "icon" => "error",
+                "title" => "Chyba coś poszło nie tak",
+                "message" => "Nie udało się wygenerować hasha resetującego",
+                "footer" => "Skontaktuj się z administratorem",
+                "data" => [
+                    "error" => $e->getMessage(),
+                    "code" => 502,
+                ]
+            ];
+            $this->res->setContent(json_encode($response));
+            return $this->res;
+        }
+
+        $user->setHash($new_hash);
+
+        $this->entityManagerInterface->persist($user);
+        $this->entityManagerInterface->flush();
+
+        $response = [
+            "icon" => "success",
+            "title" => "Sukces",
+            "message" => "Hasło zostało zmienione",
+            "footer" => "Możesz się zalogować",
+            "data" => [
+                "error" => null,
+                "code" => 0,
+            ]
+        ];
+
+        $this->res->setContent(json_encode($response));
+        return $this->res;
+
     }
 }

@@ -164,9 +164,53 @@ class Mailer
         }
         return $response;
     }
+    public function sendResetPasswordMail(string $email, string $reset_hash): array
+    {
+        try {
+            $this->mail->addAddress($email);
+            $this->mail->Subject = "Reset hasła | Kuchnia Studenta";
+            $this->mail->Body = "Witaj, aby zresetować hasło kliknij w poniższy link: <br><br><a href='http://localhost:3000/reset-password/$reset_hash'>Resetuj hasło</a>";
+            $this->mail->AltBody = "Witaj, aby zresetować hasło kliknij w poniższy link: <br><br><a href='http://localhost:3000/reset-password/$reset_hash'>Resetuj hasło</a>";
+            if ($this->mail->send()) {
+                $response = [
+                    "icon" => "success",
+                    "title" => "Wysłano maila resetującego hasło",
+                    "message" => "Sprawdź swoją skrzynkę odbiorczą",
+                    "data" => [
+                        "error" => null,
+                        "code" => 0,
+                    ]
+                ];
+            } else {
+                $response = [
+                    "icon" => "error",
+                    "title" => "Nie udało się wysłać maila resetującego hasło",
+                    "message" => "Skontaktuj się z administratorem",
+                    "footer" => "Kod błędu: 901",
+                    "data" => [
+                        "error" => $this->mail->ErrorInfo,
+                        "code" => 901,
+                    ]
+                ];
+            }
+        } catch (Exception $e) {
+            $response = [
+                "icon" => "error",
+                "title" => "Nie udało się wysłać maila resetującego hasło",
+                "message" => "Skontaktuj się z administratorem",
+                "footer" => "Kod błędu: 902",
+                "data" => [
+                    "error" => $e->getMessage(),
+                    "code" => 902,
+                ]
+            ];
+        }
+        return $response;
+    }
 
     public static function postAutoloadDump(): void
     {
         require_once __DIR__ . '/../../vendor/autoload.php';
     }
+
 }
