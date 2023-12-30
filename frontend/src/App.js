@@ -28,7 +28,7 @@ export default function App() {
           <Route path="/account" element={<Account />}></Route>
           <Route path="/logout" element={<Logout />}></Route>
           <Route path="/forgot-password" element={<Reset />}></Route>
-          <Route path="/reset-password/:token" element={<Change />}></Route>
+          <Route path="/reset-password/:hash" element={<Change />}></Route>
           <Route path="/" element={<Home />}></Route>
           <Route path="*" element={<Page404 />}></Route>
         </Routes>
