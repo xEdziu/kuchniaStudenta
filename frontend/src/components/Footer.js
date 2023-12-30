@@ -1,6 +1,5 @@
 import React from 'react'
 import styled from 'styled-components';
-import { FaInstagram, FaLinkedin, FaFacebookSquare, FaGlobe } from "react-icons/fa";
 
 const FooterStyles = styled.div`
     .heart {
@@ -52,7 +51,7 @@ const FooterStyles = styled.div`
         text-transform: capitalize;
     }
     .footer-bottom p a {
-        color: #44bae8;
+        color: var(--accent);
         font-size: 15px;
         text-decoration: none;
     }
@@ -72,11 +71,11 @@ const FooterStyles = styled.div`
         display: block;
     }
     .footer-menu ul li a {
-        color: #cfd2d6;
+        color: var(--bg);
         text-decoration: none;
     }
     .footer-menu ul li a:hover {
-        color: #27bcda;
+        color: var(--accent);
     }
 
     @media (max-width: 500px) {
