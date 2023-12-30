@@ -447,6 +447,16 @@ class AuthController extends AbstractController
             return $this->res;
         }
 
+        if (password_verify($password, $user->getPassword())) {
+            $response = [
+                "icon" => "warning",
+                "title" => "Chyba coś poszło nie tak",
+                "message" => "Hasło nie może być takie samo jak poprzednie",
+            ];
+            $this->res->setContent(json_encode($response));
+            return $this->res;
+        }
+
         $new_password = password_hash($password, PASSWORD_ARGON2ID);
 
         if (!password_verify($password, $new_password)) {
