@@ -13,7 +13,6 @@ class ContactController extends AbstractController
 {
 
     private Mailer $mailer;
-
     private Response $res;
     private RecaptchaService $recaptchaService;
 

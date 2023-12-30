@@ -154,4 +154,14 @@ class User
 
         return $this;
     }
+
+
+    public function toArray(): array
+    {
+        return [
+            "username" => $this->getUsername(),
+            "email" => $this->getEmail(),
+            "image" => $this->getImage()
+        ];
+    }
 }
