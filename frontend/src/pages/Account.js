@@ -46,9 +46,7 @@ function Account() {
           className="logout-button"
           onClick={() => {
             window.location.href = '/logout';
-          }}
-        > Wyloguj się
-        </button>
+          }}> Wyloguj się </button>
       </div>
     </MyAccountStyles>
   );
