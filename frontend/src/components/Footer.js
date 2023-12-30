@@ -78,7 +78,7 @@ const FooterStyles = styled.div`
     text-transform: capitalize;
     }
     .footer-bottom p a {
-    color: #44bae8;
+    color: var(--accent);
     font-size: 15px;
     text-decoration: none;
     }
