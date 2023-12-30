@@ -47,7 +47,7 @@ const AboutTeam = () => {
         <AboutStyles>
             <div className="text-container">
                 <h1>Kim jesteśmy?</h1>
-                <p>Jesteśmy grupą studentów, którzy chcą pomóc innym studentom w gotowaniu.</p>
+                <p>Adrian i Kuba - dwójka programistów-fanatyków, w ramach projektu do CV, dajemy wam platformę do dzielenia się swoimi przepisami!</p>
             </div>
             <div className="image-container">
                 <img src={HeroImg} alt="Hero" />

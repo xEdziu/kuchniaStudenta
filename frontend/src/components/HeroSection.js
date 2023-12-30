@@ -46,8 +46,8 @@ const HeroSection = () => {
     return (
         <HeroStyles>
             <div className="text-container">
-                <h1>Witaj w Kuchni Studenta</h1>
-                <p>Odkryj niezwykłe i tanie przepisy!</p>
+                <h1>Witaj w Kuchni Studenta!</h1>
+                <p>Dziel się swoimi kulinarnymi eksperymentami i poznawaj przepisy innych!</p>
             </div>
             <div className="image-container">
                 <img src={HeroImg} alt="Hero" />

@@ -50,8 +50,8 @@ const AboutSection = () => {
                 <img src={HeroImg} alt="Hero" />
             </div>
             <div className="text-container">
-                <h1>Dla studenta od... studenta!</h1>
-                <p>Odkrywaj i umieszczaj ciekawe przepisy</p>
+                <h1>Dla Studentów... od Studentów!</h1>
+                <p>Koniec z gotowaniem parówek w czajniku! Gotowanie nie jest tak straszne!</p>
                 <Button btnText="Zobacz przepisy" btnLink="/recipes" />
             </div>
         </AboutStyles>
