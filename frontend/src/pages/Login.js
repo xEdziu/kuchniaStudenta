@@ -98,7 +98,6 @@ function Login() {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [token, setToken] = useState('');
 
     useEffect(() => {
         ReactRecaptcha3.init(process.env.REACT_APP_SITE_KEY).then(
@@ -112,7 +111,6 @@ function Login() {
         event.preventDefault();
         ReactRecaptcha3.getToken().then(
             (token) => {
-                setToken(token);
                 if (token === undefined) {
                     Swal.fire({
                         title: 'Błąd!',
@@ -122,47 +120,47 @@ function Login() {
                     });
                     return;
                 }
+
+                const fetchData = async () => {
+                    Swal.fire({
+                        title: 'Proszę czekać',
+                        text: 'Trwa logowanie...',
+                        icon: "info",
+                        allowOutsideClick: false,
+                    });
+                    try {
+                        const response = await axios.post(`https://${process.env.REACT_APP_SYMFONY}/api/login`, {
+                            email: email,
+                            password: password,
+                            token: token
+                        });
+                        Swal.close();
+                        Swal.fire({
+                            title: response.data.title,
+                            text: response.data.message,
+                            icon: response.data.icon,
+                            footer: response.data.footer,
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            if (response.data.icon === 'success') {
+                                localStorage.setItem('sessionKey', btoa(JSON.stringify(response.data.username)));
+                                console.log(atob(localStorage.getItem('sessionKey')));
+                                window.location.href = '/';
+                            }
+                        });
+                        if (response.data.icon !== 'warning') {
+                            setEmail('');
+                            setPassword('');
+                        }
+                    } catch (error) {
+                        Swal.close();
+                        console.error('Error fetching data from backend:', error);
+                    }
+                };
+
+                fetchData();
             }
         );
-
-        const fetchData = async () => {
-            Swal.fire({
-                title: 'Proszę czekać',
-                text: 'Trwa logowanie...',
-                icon: "info",
-                allowOutsideClick: false,
-            });
-            try {
-                const response = await axios.post(`https://${process.env.REACT_APP_SYMFONY}/api/login`, {
-                    email: email,
-                    password: password,
-                    token: token
-                });
-                Swal.close();
-                Swal.fire({
-                    title: response.data.title,
-                    text: response.data.message,
-                    icon: response.data.icon,
-                    footer: response.data.footer,
-                    confirmButtonText: 'OK'
-                }).then(() => {
-                    if (response.data.icon === 'success') {
-                        localStorage.setItem('sessionKey', btoa(JSON.stringify(response.data.username)));
-                        console.log(atob(localStorage.getItem('sessionKey')));
-                        window.location.href = '/';
-                    }
-                });
-                if (response.data.icon !== 'warning') {
-                    setEmail('');
-                    setPassword('');
-                }
-            } catch (error) {
-                Swal.close();
-                console.error('Error fetching data from backend:', error);
-            }
-        };
-
-        fetchData();
     }
 
     return (

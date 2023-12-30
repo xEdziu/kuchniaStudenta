@@ -100,7 +100,6 @@ function Register() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [passwordCheck, setPasswordCheck] = useState('');
-    const [token, setToken] = useState('');
 
     useEffect(() => {
         ReactRecaptcha3.init(process.env.REACT_APP_SITE_KEY).then(
@@ -114,7 +113,6 @@ function Register() {
         event.preventDefault();
         ReactRecaptcha3.getToken().then(
             (token) => {
-                setToken(token);
                 if (token === undefined) {
                     Swal.fire({
                         title: 'Błąd!',
@@ -124,61 +122,61 @@ function Register() {
                     });
                     return;
                 }
+                if (password !== passwordCheck) {
+                    Swal.fire({
+                        title: 'Błąd!',
+                        text: 'Hasła nie są takie same!',
+                        icon: 'error',
+                        confirmButtonText: 'Spróbuj ponownie'
+                    });
+                    return;
+                }
+
+                if (password.length < 8) {
+                    Swal.fire({
+                        title: 'Błąd!',
+                        text: 'Hasło musi mieć minimum 8 znaków!',
+                        icon: 'error',
+                        confirmButtonText: 'Spróbuj ponownie'
+                    });
+                    return;
+                }
+
+                const fetchData = async () => {
+                    Swal.fire({
+                        title: 'Proszę czekać',
+                        text: 'Trwa rejestrowanie...',
+                        icon: "info",
+                        allowOutsideClick: false,
+                    });
+                    try {
+                        const response = await axios.post(`https://${process.env.REACT_APP_SYMFONY}/api/register`, {
+                            name: name,
+                            email: email,
+                            pwd1: password,
+                            token: token
+                        });
+                        Swal.close();
+                        Swal.fire({
+                            title: response.data.title,
+                            text: response.data.message,
+                            icon: response.data.icon,
+                            footer: response.data.footer,
+                            confirmButtonText: 'OK'
+                        });
+                        setName('');
+                        setEmail('');
+                        setPassword('');
+                        setPasswordCheck('');
+                    } catch (error) {
+                        Swal.close();
+                        console.error('Error fetching data from backend:', error);
+                    }
+                };
+
+                fetchData();
             }
         );
-        if (password !== passwordCheck) {
-            Swal.fire({
-                title: 'Błąd!',
-                text: 'Hasła nie są takie same!',
-                icon: 'error',
-                confirmButtonText: 'Spróbuj ponownie'
-            });
-            return;
-        }
-
-        if (password.length < 8) {
-            Swal.fire({
-                title: 'Błąd!',
-                text: 'Hasło musi mieć minimum 8 znaków!',
-                icon: 'error',
-                confirmButtonText: 'Spróbuj ponownie'
-            });
-            return;
-        }
-
-        const fetchData = async () => {
-            Swal.fire({
-                title: 'Proszę czekać',
-                text: 'Trwa rejestrowanie...',
-                icon: "info",
-                allowOutsideClick: false,
-            });
-            try {
-                const response = await axios.post(`https://${process.env.REACT_APP_SYMFONY}/api/register`, {
-                    name: name,
-                    email: email,
-                    pwd1: password,
-                    token: token
-                });
-                Swal.close();
-                Swal.fire({
-                    title: response.data.title,
-                    text: response.data.message,
-                    icon: response.data.icon,
-                    footer: response.data.footer,
-                    confirmButtonText: 'OK'
-                });
-                setName('');
-                setEmail('');
-                setPassword('');
-                setPasswordCheck('');
-            } catch (error) {
-                Swal.close();
-                console.error('Error fetching data from backend:', error);
-            }
-        };
-
-        fetchData();
     }
 
     return (
