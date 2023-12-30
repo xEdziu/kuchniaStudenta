@@ -143,8 +143,7 @@ function Login() {
                             confirmButtonText: 'OK'
                         }).then(() => {
                             if (response.data.icon === 'success') {
-                                localStorage.setItem('sessionKey', btoa(JSON.stringify(response.data.username)));
-                                console.log(atob(localStorage.getItem('sessionKey')));
+                                localStorage.setItem('sessionKey', btoa(response.data.data.username));
                                 window.location.href = '/';
                             }
                         });

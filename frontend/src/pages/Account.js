@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 
 const MyAccountStyles = styled.div`
@@ -23,7 +23,7 @@ const MyAccountStyles = styled.div`
   .logout-button {
     margin-top: 20px;
     padding: 10px;
-    background-color: var(--accent); /* Adjust as needed */
+    background-color: var(--accent);
     color: #fff;
     border: none;
     border-radius: 4px;
@@ -32,19 +32,24 @@ const MyAccountStyles = styled.div`
 `;
 
 function Account() {
-  const handleLogout = () => {
-    // Handle logout logic here
-  };
-
+  useEffect(() => {
+    if (!localStorage.getItem('sessionKey')) {
+      window.location.href = '/login';
+    }
+  });
   return (
     <MyAccountStyles>
       <h2>Moje konto</h2>
       <div className="container">
-        <p>Witaj, Kubis10!</p>
+        <p>Witaj, {atob(localStorage.getItem('sessionKey'))}</p>
+        <button
+          className="logout-button"
+          onClick={() => {
+            window.location.href = '/logout';
+          }}
+        > Wyloguj się
+        </button>
       </div>
-      <button className="logout-button" onClick={handleLogout}>
-        Wyloguj się
-      </button>
     </MyAccountStyles>
   );
 }
