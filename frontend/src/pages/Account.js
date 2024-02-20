@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import DataChange from '../components/Account/DataChange';
 
 const MyAccountStyles = styled.div`
   display: flex;
@@ -7,14 +8,16 @@ const MyAccountStyles = styled.div`
   align-items: center;
   padding: 20px;
 
+  h2 {
+    margin-bottom: 20px;
+  }
+
   .container {
     background-color: #fff;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 300px;
     text-align: center;
-
     p {
       margin-bottom: 1rem;
     }
@@ -37,16 +40,33 @@ function Account() {
       window.location.href = '/login';
     }
   });
+  const [data, isData] = useState(false);
+
+  function dataHandler() {
+    isData(false);
+  }
   return (
     <MyAccountStyles>
       <h2>Moje konto</h2>
       <div className="container">
-        <p>Witaj, {atob(localStorage.getItem('sessionKey'))}</p>
-        <button
-          className="logout-button"
-          onClick={() => {
-            window.location.href = '/logout';
-          }}> Wyloguj się </button>
+        {
+          data ? <DataChange isData={dataHandler} /> : (
+            <>
+              <p>Witaj, {atob(localStorage.getItem('sessionKey'))}</p>
+              <button
+                className="logout-button"
+                onClick={() => {
+                  window.location.href = '/logout';
+                }}> Wyloguj się </button>
+
+              <button
+                className="logout-button"
+                onClick={() => {
+                  isData(true);
+                }}> Zmień dane </button>
+            </>
+          )
+        }
       </div>
     </MyAccountStyles>
   );

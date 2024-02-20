@@ -208,4 +208,33 @@ class Ingredient
 
         return $this;
     }
+
+    public function clearStoresIds(): static
+    {
+        $this->store_id->clear();
+
+        return $this;
+    }
+
+    public function toArray(): array
+    {
+        $stores = [];
+        foreach ($this->getStoreId() as $store) {
+            $stores[] = $store;
+        }
+        return [
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+            'type' => $this->getType(),
+            'calories_per_100gram' => $this->getCaloriesPer100gram(),
+            'protein_per_100gram' => $this->getProteinPer100gram(),
+            'carbohydrates_per_100gram' => $this->getCarbohydratesPer100gram(),
+            'fat_per_100gram' => $this->getFatPer100gram(),
+            'price' => $this->getPrice(),
+            'measure_type' => $this->getMeasureType(),
+            'quantity' => $this->getQuantity(),
+            'label' => $this->getLabel(),
+            'store_id' => $stores
+        ];
+    }
 }

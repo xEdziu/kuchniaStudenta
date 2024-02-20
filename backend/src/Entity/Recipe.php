@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\RecipeRepository;
 use Doctrine\ORM\Mapping as ORM;
+use PhpParser\Node\Expr\Cast\Array_;
 
 #[ORM\Entity(repositoryClass: RecipeRepository::class)]
 class Recipe
@@ -25,8 +26,11 @@ class Recipe
     #[ORM\Column]
     private ?float $rating = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?float $rating_people_number = null;
+    #[ORM\Column]
+    private ?array $rates = null;
+
+    #[ORM\Column]
+    private ?array $users_id_rated = null;
 
     #[ORM\Column(length: 255)]
     private ?string $label = null;
@@ -42,7 +46,8 @@ class Recipe
     private ?User $user_id = null;
 
     #[ORM\Column]
-    private array $ingridients = [];
+    private array $ingredients = [];
+
 
     public function getId(): ?int
     {
@@ -94,26 +99,52 @@ class Recipe
 
     public function getRating(): ?float
     {
+        $this->setRating();
         return $this->rating;
     }
 
-    public function setRating(float $rating): static
+    private function setRating(): static
     {
-        $this->rating = $rating;
+        if ($this->getNumberOfRates() == 0) {
+            $this->rating = 0.0;
+            return $this;
+        }
+        $this->rating = array_sum($this->getRates()) / count($this->getRates());
 
         return $this;
     }
 
-    public function getRatingPeopleNumber(): ?float
+    public function getNumberOfRates(): int
     {
-        return $this->rating_people_number;
+        return $this->rates == null ? 0 : count($this->getRates());
     }
 
-    public function setRatingPeopleNumber(?float $rating_people_number): static
+    private function getRates(): ?array
     {
-        $this->rating_people_number = $rating_people_number;
+        return $this->rates;
+    }
+
+    public function addRate(float $rate): static
+    {
+        $this->rates[] = $rate;
 
         return $this;
+    }
+
+    public function getUsersIdRated(): ?array
+    {
+        return $this->users_id_rated;
+    }
+
+    public function setUsersIdRated(int $users_id_rated): static
+    {
+        $this->users_id_rated[] = $users_id_rated;
+        return $this;
+    }
+
+    public function checkIfUserRated(int $user_id): bool
+    {
+        return in_array($user_id, $this->getUsersIdRated());
     }
 
     public function getLabel(): ?string
@@ -164,14 +195,14 @@ class Recipe
         return $this;
     }
 
-    public function getIngridients(): array
+    public function getIngredients(): array
     {
-        return $this->ingridients;
+        return $this->ingredients;
     }
 
-    public function setIngridients(array $ingridients): static
+    public function setIngridients(array $ingredients): static
     {
-        $this->ingridients = $ingridients;
+        $this->ingredients = $ingredients;
 
         return $this;
     }

@@ -89,6 +89,25 @@ class MyAccountController extends AbstractController
 
         $data = json_decode($req->getContent(), true);
 
+        $password = $data['password'];
+
+        if ($password != "stay") {
+            $new_password = password_hash($password, PASSWORD_ARGON2ID);
+
+            if (!password_verify($password, $new_password)) {
+                $response = [
+                    "icon" => "error",
+                    "title" => "Chyba coś poszło nie tak",
+                    "message" => "Nie udało się zahashować hasła",
+                    "footer" => "Skontaktuj się z administratorem",
+                ];
+                $this->res->setContent(json_encode($response));
+                return $this->res;
+            }
+
+            $user->setPassword($new_password);
+        }
+
         $image = $data['image'];
         $username = $data['username'];
 

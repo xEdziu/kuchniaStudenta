@@ -4,7 +4,8 @@
 
 namespace App\Entity\enums;
 
-enum IngredientType: string {
+enum IngredientType: string
+{
 
     case VEGETABLE = 'vegetable';
     case MEAT = 'meat';
@@ -14,7 +15,4 @@ enum IngredientType: string {
     case FRUIT = 'fruit';
     case SPICE = 'spice';
     case EGG = 'egg';
-    
 }
-
-?>
