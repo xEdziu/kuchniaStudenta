@@ -76,6 +76,7 @@ const FooterStyles = styled.div`
     }
     .footer-menu ul li a:hover {
         color: var(--accent);
+        
     }
 
     @media (max-width: 500px) {
