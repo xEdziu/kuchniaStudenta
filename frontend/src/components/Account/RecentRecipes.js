@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 const RecentStyles = styled.div`
@@ -6,6 +6,7 @@ const RecentStyles = styled.div`
     flex-direction: column;
     align-items: center;
     padding: 20px;
+    width: 100%;
     position: relative;
     .text-container {
         width: 100%;
@@ -40,7 +41,7 @@ const RecentRecipes = () => {
     return (
         <RecentStyles>
             <div className="text-container">
-                <h2>Ostatnio dodane przepisy</h2>
+                <h2>Twoje przepisy</h2>
                 <div className="recipe-container">
                     <div className="recipe">
                         <img src="https://via.placeholder.com/150" alt="recipe" />

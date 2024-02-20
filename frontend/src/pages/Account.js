@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import DataChange from '../components/Account/DataChange';
+import RecentRecipes from '../components/Account/RecentRecipes';
 
 const MyAccountStyles = styled.div`
   display: flex;
@@ -22,6 +23,30 @@ const MyAccountStyles = styled.div`
       margin-bottom: 1rem;
     }
   }
+
+  .inner-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    .info {
+      width: 30%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      p {
+        margin-bottom: 20px;
+      }
+      img {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 50%;
+        margin-bottom: 20px;
+      }
+    }
+  }
+  
 
   .logout-button {
     margin-top: 20px;
@@ -51,20 +76,23 @@ function Account() {
       <div className="container">
         {
           data ? <DataChange isData={dataHandler} /> : (
-            <>
-              <p>Witaj, {atob(localStorage.getItem('sessionKey'))}</p>
-              <button
-                className="logout-button"
-                onClick={() => {
-                  window.location.href = '/logout';
-                }}> Wyloguj się </button>
-
-              <button
-                className="logout-button"
-                onClick={() => {
-                  isData(true);
-                }}> Zmień dane </button>
-            </>
+            <div className='inner-container'>
+              <div className='info'>
+                <img src="https://via.placeholder.com/150" alt="user" />
+                <p>Witaj, {atob(localStorage.getItem('sessionKey'))}</p>
+                <button
+                  className="logout-button"
+                  onClick={() => {
+                    isData(true);
+                  }}> Zmień dane </button>
+                <button
+                  className="logout-button"
+                  onClick={() => {
+                    window.location.href = '/logout';
+                  }}> Wyloguj się </button>
+              </div>
+              <RecentRecipes />
+            </div>
           )
         }
       </div>
