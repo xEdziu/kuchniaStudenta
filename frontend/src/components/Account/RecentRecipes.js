@@ -67,10 +67,6 @@ const RecentRecipes = () => {
                         <img src="https://via.placeholder.com/150" alt="recipe" />
                         <h3>Nazwa przepisu</h3>
                     </div>
-                    <div className="recipe">
-                        <img src="https://via.placeholder.com/150" alt="recipe" />
-                        <h3>Nazwa przepisu</h3>
-                    </div>
                 </div>
             </div>
         </RecentStyles>
